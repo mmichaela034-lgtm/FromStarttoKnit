@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>From Start To Knit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --cream: #f5f3b9;
+  --brown: #7a5c3a;
+  --brown-light: #b8956a;
+  --brown-muted: #6b6b62;
+  --brown-faint: #9b9b8c;
+  --border: rgba(26,26,24,0.13);
+  --border-faint: rgba(26,26,24,0.07);
+  --status-active: #FF69B4;
+  --status-paused: #FF8500;
+  --status-done: #639922;
+}
+html, body { font-family: 'DM Mono', monospace; background: var(--cream); color: var(--brown); min-height: 100%; }
+.page { display: flex; flex-direction: column; min-height: 100vh; }
+
+/* ── HEADER ── */
+.header {
+  display: flex; align-items: center; justify-content: center;
+  padding: 1.8rem 2.5rem 1.4rem;
+  border-bottom: 0.5px solid var(--border);
+  position: sticky; top: 0; background: var(--cream); z-index: 10; gap: 1.2rem;
+}
+.header-needles { display: flex; align-items: flex-start; padding-top: 0.3rem; }
+.needle-svg { display: block; }
+.header-center { display: flex; flex-direction: column; align-items: center; gap: 0.3rem; }
+.header-title { font-size: clamp(1.8rem,4vw,3rem); font-weight: 400; letter-spacing: -0.01em; }
+.header-meta { font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--brown-muted); }
+.header-desc {
+  font-size: 12px; color: var(--brown-muted); font-family: 'Lora', serif;
+  font-style: italic; text-align: center; max-width: 340px; line-height: 1.6; margin-top: 0.2rem;
+  cursor: text; outline: none; border-bottom: 1px dashed transparent; transition: border-color .2s;
+}
+.header-desc:hover { border-bottom-color: var(--brown-muted); }
+.header-desc:focus { border-bottom-color: var(--brown-light); font-style: normal; color: var(--brown); }
+.header-desc.placeholder { opacity: 0.5; }
+
+/* ── VIEW TOGGLE ── */
+.view-toggle {
+  display: flex; align-items: center; justify-content: center;
+  gap: 0; padding: 0.8rem 2.5rem 0;
+  border-bottom: 0.5px solid var(--border); background: var(--cream);
+}
+.view-btn {
+  font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--brown-muted); background: transparent; border: 0.5px solid var(--border);
+  cursor: pointer; padding: 5px 16px; transition: background .15s, color .15s; line-height: 1.6;
+}
+.view-btn:first-child { border-radius: 6px 0 0 6px; border-right: none; }
+.view-btn:last-child  { border-radius: 0 6px 6px 0; border-left: none; }
+.view-btn.active { background: var(--brown-light); color: #fff; border-color: var(--brown-light); }
+.view-btn:not(.active):hover { background: rgba(0,0,0,0.05); }
+
+/* ── LAYOUT ── */
+.content {
+  display: grid; grid-template-columns: 1fr 290px;
+  grid-template-areas: "main sidebar"; flex: 1;
+}
+@media (max-width: 700px) {
+  .content { grid-template-columns: 1fr; grid-template-areas: "main" "sidebar"; }
+  .sidebar { border-left: none; border-top: 0.5px solid var(--border); }
+  .needle-svg { display: none; }
+}
+.main-col {
+  grid-area: main; display: flex; flex-direction: column;
+  padding: 2rem 2.5rem; gap: 0; min-width: 0;
+}
+
+/* ── SHARED SCARF BLOCK ── */
+.scarf-section { display: block; width: 100%; margin-bottom: 2rem; }
+.scarf-section svg { display: block; width: 100%; overflow: visible; }
+
+/* ── PROJECT VIEW ── */
+.stats-section {
+  display: flex; flex-direction: row; gap: 0;
+  margin-bottom: 1.5rem;
+  border-top: 0.5px solid var(--border-faint); padding-top: 1.2rem;
+}
+.stat-block { flex: 1; padding-right: 2rem; border-right: 0.5px solid var(--border-faint); margin-right: 2rem; }
+.stat-block:last-child { border-right: none; padding-right: 0; margin-right: 0; }
+.stat-label { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--brown-muted); display: block; margin-bottom: 4px; }
+.stat-val { font-family: 'Lora', serif; font-size: 2.2rem; font-weight: 400; line-height: 1; display: block; margin-bottom: 4px; }
+.stat-note { font-size: 11px; color: var(--brown-muted); display: block; }
+
+.footer-row {
+  font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--brown-faint);
+  border-top: 0.5px solid var(--border-faint); padding-top: 0.8rem;
+}
+
+.log-toggle {
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--brown-muted); cursor: pointer;
+  margin-top: 1.5rem; padding-top: 1rem;
+  border-top: 0.5px solid var(--border-faint); user-select: none;
+}
+.log-toggle:hover { color: var(--brown); }
+.log-entries { margin-top: 0.6rem; max-height: 180px; overflow-y: auto; display: flex; flex-direction: column; gap: 0; }
+.log-entry { display: flex; align-items: baseline; gap: 8px; padding: 4px 0; border-bottom: 0.5px solid var(--border-faint); font-size: 12px; }
+.log-entry:last-child { border-bottom: none; }
+.log-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-top: 2px; }
+.log-name { color: var(--brown); font-weight: 500; flex-shrink: 0; max-width: 90px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.log-delta { color: var(--brown-muted); flex: 1; }
+.log-date { color: var(--brown-faint); white-space: nowrap; flex-shrink: 0; }
+
+/* ── STATUS VIEW ── */
+#view-status { display: none; flex-direction: column; gap: 0; }
+
+/* caption mirrors footer-row */
+.status-caption-row {
+  font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--brown-faint);
+  border-top: 0.5px solid var(--border-faint);
+  padding-top: 0.8rem;
+  margin-bottom: 1.5rem;
+}
+
+/* legend mirrors stats-section top border + padding */
+.status-legend {
+  display: flex; gap: 16px; flex-wrap: wrap;
+  border-top: 0.5px solid var(--border-faint);
+  padding-top: 1.2rem;
+  margin-bottom: 1.5rem;
+}
+.legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--brown-muted); }
+.legend-swatch { width: 12px; height: 12px; border-radius: 2px; flex-shrink: 0; border: 0.5px solid rgba(0,0,0,0.1); }
+
+.status-sections { display: flex; flex-direction: column; gap: 0; }
+.status-group { margin-bottom: 1.2rem; }
+.status-group:last-child { margin-bottom: 0; }
+.status-section-label {
+  font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--brown-muted); margin-bottom: 6px;
+  display: flex; align-items: center; gap: 8px;
+}
+.status-section-label::after { content:''; flex:1; height:0.5px; background: var(--border); }
+.status-proj-row { display: flex; align-items: center; gap: 9px; padding: 4px 5px; font-size: 12px; }
+.status-proj-swatch { width: 9px; height: 9px; border-radius: 2px; flex-shrink: 0; border: 0.5px solid rgba(0,0,0,0.1); }
+.status-proj-name { flex: 1; color: var(--brown); }
+.status-proj-meta { color: var(--brown-muted); font-size: 11px; }
+
+/* ── SIDEBAR ── */
+.sidebar { grid-area: sidebar; border-left: 0.5px solid var(--border); padding: 1.6rem 1.4rem; display: flex; flex-direction: column; gap: 0; }
+.sidebar-heading { font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--brown-muted); margin-bottom: 0.8rem; padding-bottom: 0.5rem; border-bottom: 0.5px solid var(--border); }
+#project-list { flex: 1; }
+
+/* ── PROJECT ROW ── */
+.project-row {
+  display: flex; align-items: center; gap: 9px;
+  padding: 7px 5px; border-bottom: 0.5px solid var(--border-faint);
+  cursor: grab; user-select: none; border-radius: 4px; transition: background .12s; position: relative;
+}
+.project-row:last-child { border-bottom: none; }
+.project-row:hover { background: rgba(0,0,0,0.04); }
+.project-row.dragging { opacity: 0.4; cursor: grabbing; }
+.project-row.drag-over { background: rgba(184,149,106,0.15); border-top: 1.5px solid var(--brown-light); }
+.drag-handle { font-size: 12px; color: var(--brown-muted); opacity: 0.4; cursor: grab; padding: 0 2px; flex-shrink: 0; }
+.swatch { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; border: 0.5px solid rgba(0,0,0,0.1); cursor: pointer; }
+.project-name { font-size: 12px; color: #1a1a18; flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.project-right { display: flex; flex-direction: column; align-items: flex-end; gap: 3px; flex-shrink: 0; }
+.project-rows { font-size: 12px; color: var(--brown-muted); }
+.bar-wrap { width: 54px; height: 3px; background: rgba(0,0,0,0.08); border-radius: 2px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 2px; opacity: 0.75; transition: width .3s ease; }
+.pill { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; padding: 1px 6px; border-radius: 8px; cursor: pointer; transition: opacity .15s; }
+.pill:hover { opacity: 0.7; }
+.p-active { background: #E1F5EE; color: #0F6E56; }
+.p-paused { background: #FAEEDA; color: #854F0B; }
+.p-done   { background: #EAF3DE; color: #3B6D11; }
+.deadline-badge { font-size: 9px; color: var(--brown-muted); white-space: nowrap; }
+.deadline-badge.overdue { color: #A32D2D; }
+.deadline-badge.soon    { color: #854F0B; }
+
+/* ── ADD ROW ── */
+.add-row { display: flex; align-items: center; gap: 8px; padding: 0.6rem 5px 0; border-top: 0.5px solid var(--border-faint); margin-top: 0.4rem; }
+.add-btn { width: 22px; height: 22px; border-radius: 50%; border: 0.5px solid var(--border); background: transparent; font-size: 16px; cursor: pointer; color: var(--brown); display: flex; align-items: center; justify-content: center; line-height: 1; font-family: inherit; transition: background .12s; }
+.add-btn:hover { background: rgba(0,0,0,0.06); }
+.add-label { font-size: 12px; color: var(--brown-muted); }
+
+/* ── TOOLTIP ── */
+.tooltip { position: fixed; pointer-events: none; background: #3a2e1e; color: var(--cream); font-family: 'DM Mono', monospace; font-size: 12px; padding: 5px 10px; border-radius: 6px; white-space: nowrap; opacity: 0; transition: opacity .12s; z-index: 9000; max-width: 240px; }
+
+/* ── MODALS ── */
+.modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.22); display: flex; align-items: center; justify-content: center; z-index: 500; opacity: 0; pointer-events: none; transition: opacity .18s; }
+.modal-backdrop.open { opacity: 1; pointer-events: all; }
+.modal { background: var(--cream); border-radius: 10px; padding: 1.5rem 1.7rem; width: 290px; border: 0.5px solid var(--border); box-shadow: 0 12px 32px rgba(0,0,0,0.14); }
+.modal h3 { font-size: 14px; font-weight: 500; color: var(--brown); margin-bottom: 1.1rem; font-family: 'Lora', serif; }
+.field { display: flex; flex-direction: column; gap: 4px; margin-bottom: 0.9rem; }
+.field label { font-size: 10px; color: var(--brown-muted); letter-spacing: 0.12em; text-transform: uppercase; }
+.field input[type=range] { width: 100%; accent-color: var(--brown-light); cursor: pointer; }
+.field input[type=text], .field input[type=date] { width: 100%; padding: 6px 9px; border: 0.5px solid var(--border); border-radius: 6px; background: rgba(255,255,255,0.5); color: var(--brown); font-family: inherit; font-size: 12px; outline: none; transition: border-color .15s; }
+.field input[type=text]:focus, .field input[type=date]:focus { border-color: var(--brown-light); }
+.field input[type=color] { width: 100%; height: 34px; border-radius: 6px; border: 0.5px solid var(--border); cursor: pointer; padding: 2px; background: transparent; }
+.row-readout { font-family: 'Lora', serif; font-size: 1.6rem; font-weight: 400; color: var(--brown); text-align: center; padding: 4px 0; }
+.modal-btns { display: flex; gap: 8px; justify-content: flex-end; margin-top: 0.4rem; }
+.btn { padding: 5px 14px; border-radius: 6px; border: 0.5px solid rgba(0,0,0,0.18); background: transparent; font-size: 12px; cursor: pointer; color: var(--brown); font-family: inherit; transition: background .12s; }
+.btn:hover { background: rgba(0,0,0,0.06); }
+.btn.primary { background: var(--brown-light); color: #fff; border-color: var(--brown-light); }
+.btn.primary:hover { background: #a07d58; }
+.btn.danger { color: #A32D2D; border-color: rgba(163,45,45,0.3); }
+.btn.danger:hover { background: rgba(163,45,45,0.07); }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="header">
+    <div class="header-needles">
+      <svg class="needle-svg" width="90" height="48" viewBox="0 0 90 48">
+        <line x1="4" y1="17" x2="80" y2="13" stroke="#c0a882" stroke-width="4" stroke-linecap="round"/>
+        <circle cx="4" cy="17" r="7" fill="#b8956a"/>
+        <polygon points="80,13 88,13 80,10" fill="#c0a882"/>
+        <polygon points="80,13 88,13 80,16" fill="#b8956a"/>
+        <line x1="4" y1="33" x2="80" y2="37" stroke="#c0a882" stroke-width="4" stroke-linecap="round"/>
+        <circle cx="4" cy="33" r="7" fill="#b8956a"/>
+        <polygon points="80,37 88,37 80,34" fill="#c0a882"/>
+        <polygon points="80,37 88,37 80,40" fill="#b8956a"/>
+      </svg>
+    </div>
+    <div class="header-center">
+      <h1 class="header-title">From Start To Knit</h1>
+      <div class="header-meta">Knitting progress tracker</div>
+      <p class="header-desc placeholder" id="header-desc" contenteditable="true">Your description here — click to edit and tell visitors what this tracker is about.</p>
+    </div>
+    <div class="header-needles">
+      <svg class="needle-svg" width="90" height="48" viewBox="0 0 90 48">
+        <line x1="86" y1="17" x2="10" y2="13" stroke="#c0a882" stroke-width="4" stroke-linecap="round"/>
+        <circle cx="86" cy="17" r="7" fill="#b8956a"/>
+        <polygon points="10,13 2,13 10,10" fill="#c0a882"/>
+        <polygon points="10,13 2,13 10,16" fill="#b8956a"/>
+        <line x1="86" y1="33" x2="10" y2="37" stroke="#c0a882" stroke-width="4" stroke-linecap="round"/>
+        <circle cx="86" cy="33" r="7" fill="#b8956a"/>
+        <polygon points="10,37 2,37 10,34" fill="#c0a882"/>
+        <polygon points="10,37 2,37 10,40" fill="#b8956a"/>
+      </svg>
+    </div>
+  </header>
+
+  <div class="view-toggle">
+    <button class="view-btn active" id="btn-projects" onclick="switchView('projects')">By project</button>
+    <button class="view-btn" id="btn-status" onclick="switchView('status')">By status</button>
+  </div>
+
+  <div class="content">
+    <div class="main-col">
+
+      <!-- ── PROJECT VIEW ── -->
+      <div id="view-projects">
+        <div class="scarf-section">
+          <svg id="scarf-svg" height="160" viewBox="0 0 900 160" preserveAspectRatio="none" cursor="crosshair">
+            <defs>
+              <pattern id="stitch-pat" x="0" y="0" width="6" height="6" patternUnits="userSpaceOnUse">
+                <line x1="3" y1="0" x2="3" y2="6" stroke="rgba(255,255,255,0.13)" stroke-width="1"/>
+              </pattern>
+            </defs>
+            <g id="fringe-left-svg"></g>
+            <g id="bands-group"></g>
+            <g id="stitch-overlay"></g>
+            <path id="wave-top-line" fill="none" stroke="rgba(0,0,0,0.06)" stroke-width="1"/>
+            <path id="wave-bot-line" fill="none" stroke="rgba(0,0,0,0.06)" stroke-width="1"/>
+            <g id="fringe-right-svg"></g>
+          </svg>
+        </div>
+
+        <div class="stats-section">
+          <div class="stat-block">
+            <span class="stat-label">Total progress</span>
+            <span class="stat-val" id="total-pct">—</span>
+            <span class="stat-note">across all projects</span>
+          </div>
+          <div class="stat-block">
+            <span class="stat-label">Rows knit</span>
+            <span class="stat-val" id="total-rows">—</span>
+            <span class="stat-note" id="total-note">of — total</span>
+          </div>
+          <div class="stat-block">
+            <span class="stat-label">Projects</span>
+            <span class="stat-val" id="stat-done">—</span>
+            <span class="stat-note" id="stat-breakdown">— active · — paused</span>
+          </div>
+        </div>
+
+        <div class="footer-row" id="ftr-text"></div>
+
+        <div class="log-toggle" id="log-toggle">
+          <span>Row log</span>
+          <span id="log-arrow">▸</span>
+        </div>
+        <div id="log-entries-wrap" style="display:none">
+          <div class="log-entries" id="log-entries"></div>
+        </div>
+      </div>
+
+      <!-- ── STATUS VIEW ── -->
+      <div id="view-status">
+        <div class="scarf-section">
+          <svg id="status-scarf-svg" height="160" viewBox="0 0 900 160" preserveAspectRatio="none" cursor="crosshair"></svg>
+        </div>
+
+        <div class="status-caption-row" id="status-scarf-caption"></div>
+
+        <div class="status-legend">
+          <div class="legend-item"><div class="legend-swatch" style="background:var(--status-active)"></div>Active — knit</div>
+          <div class="legend-item"><div class="legend-swatch" style="background:var(--status-active);opacity:0.45;background-image:repeating-linear-gradient(45deg,rgba(255,255,255,0.4) 0px,rgba(255,255,255,0.4) 2px,transparent 2px,transparent 7px)"></div>Active — remaining</div>
+          <div class="legend-item"><div class="legend-swatch" style="background:var(--status-paused)"></div>Paused — knit</div>
+          <div class="legend-item"><div class="legend-swatch" style="background:var(--status-paused);opacity:0.45;background-image:repeating-linear-gradient(45deg,rgba(255,255,255,0.4) 0px,rgba(255,255,255,0.4) 2px,transparent 2px,transparent 7px)"></div>Paused — remaining</div>
+          <div class="legend-item"><div class="legend-swatch" style="background:var(--status-done)"></div>Complete</div>
+        </div>
+
+        <div class="status-sections">
+          <div class="status-group">
+            <div class="status-section-label">Active</div>
+            <div id="status-list-active"></div>
+          </div>
+          <div class="status-group">
+            <div class="status-section-label">Paused</div>
+            <div id="status-list-paused"></div>
+          </div>
+          <div class="status-group">
+            <div class="status-section-label">Complete</div>
+            <div id="status-list-done"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <aside class="sidebar">
+      <p class="sidebar-heading">Projects — drag to reorder</p>
+      <div id="project-list"></div>
+      <div class="add-row">
+        <button class="add-btn" id="add-proj-btn" title="Add project">+</button>
+        <span class="add-label">Add project</span>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<div class="tooltip" id="tooltip"></div>
+
+<!-- Edit Modal -->
+<div class="modal-backdrop" id="modal-backdrop">
+  <div class="modal">
+    <h3 id="modal-title">Edit project</h3>
+    <div class="field"><label>Project name</label><input type="text" id="modal-name" placeholder="Project name"></div>
+    <div class="field">
+      <label>Rows knit</label>
+      <div class="row-readout" id="modal-readout">0</div>
+      <input type="range" id="modal-slider" min="0" max="200" value="0" step="1">
+    </div>
+    <div class="field">
+      <label>Status</label>
+      <select id="modal-status" style="width:100%;padding:6px 9px;border:0.5px solid var(--border);border-radius:6px;background:rgba(255,255,255,0.5);color:var(--brown);font-family:inherit;font-size:12px;cursor:pointer;outline:none">
+        <option value="active">Active</option>
+        <option value="paused">Paused</option>
+        <option value="done">Done</option>
+      </select>
+    </div>
+    <div class="field"><label>Goal date (optional)</label><input type="date" id="modal-date"></div>
+    <div class="modal-btns">
+      <button class="btn danger" id="modal-delete">Delete</button>
+      <button class="btn" id="modal-cancel">Cancel</button>
+      <button class="btn primary" id="modal-save">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Modal -->
+<div class="modal-backdrop" id="add-backdrop">
+  <div class="modal">
+    <h3>Add project</h3>
+    <div class="field"><label>Name</label><input type="text" id="add-name" placeholder="e.g. Cable-knit blanket"></div>
+    <div class="field"><label>Color</label><input type="color" id="add-color" value="#e07b39"></div>
+    <div class="field">
+      <label>Goal rows</label>
+      <div class="row-readout" id="add-total-readout">150 rows</div>
+      <input type="range" id="add-total-slider" min="10" max="600" value="150" step="5">
+    </div>
+    <div class="field"><label>Goal date (optional)</label><input type="date" id="add-date"></div>
+    <div class="modal-btns">
+      <button class="btn" id="add-cancel">Cancel</button>
+      <button class="btn primary" id="add-save">Add</button>
+    </div>
+  </div>
+</div>
+
+<!-- Color Picker Popover -->
+<div id="color-popover" style="display:none;position:fixed;z-index:600;background:var(--cream);border:0.5px solid var(--border);border-radius:8px;padding:10px;box-shadow:0 8px 24px rgba(0,0,0,0.14)">
+  <div style="display:flex;flex-wrap:wrap;gap:6px;width:132px"></div>
+</div>
+
+<script>
+const PALETTE = ['#FA003F','#378ADD','#FF69B4','#222222','#7F77DD','#E07B39','#D4537E','#639922','#FFA500','#c0a882','#e07b39','#2e86ab'];
+const STATUS_COLOR = { active: '#FF69B4', paused: '#FFA500', done: '#639922' };
+
+let projects = [
+  { name:"Fingerless gloves", pct:100, status:"done",   color:"#FA003F", rows:180, total:180, deadline:null },
+  { name:"Balaclava",         pct:100, status:"done",   color:"#378ADD", rows:200, total:200, deadline:null },
+  { name:"Raglan sweater",    pct:68,  status:"active", color:"#1D9E75", rows:204, total:300, deadline:null },
+  { name:"Sweater vest",      pct:100, status:"done",   color:"#222222", rows:80,  total:80,  deadline:null },
+  { name:"Mittens",           pct:42,  status:"paused", color:"#7F77DD", rows:88,  total:210, deadline:null },
+  { name:"Color work hat",    pct:22,  status:"active", color:"#378ADD", rows:44,  total:200, deadline:null },
+  { name:"Lace shawl",        pct:0,   status:"active", color:"#cccccc", rows:0,   total:200, deadline:null },
+];
+let log = [];
+let currentView = 'projects';
+
+// ── VIEW SWITCHING ──
+function switchView(v) {
+  currentView = v;
+  document.getElementById('view-projects').style.display = v === 'projects' ? '' : 'none';
+  document.getElementById('view-status').style.display   = v === 'status'   ? 'flex' : 'none';
+  document.getElementById('btn-projects').classList.toggle('active', v === 'projects');
+  document.getElementById('btn-status').classList.toggle('active',   v === 'status');
+  if (v === 'status') renderStatusView();
+}
+
+// ── SVG HELPERS ──
+const SVG_NS = 'http://www.w3.org/2000/svg';
+const W=900, H=160, WAVE_AMP=22, WAVE_FREQ=2, SCARF_H=70, CY=H/2, FRINGE_W=30, BODY_W=W-FRINGE_W*2, BODY_X=FRINGE_W, PHASE=0.6;
+
+function ns(t){ return document.createElementNS(SVG_NS,t); }
+function waveY(x,ph){ return CY + WAVE_AMP * Math.sin((x/BODY_W)*Math.PI*2*WAVE_FREQ + ph); }
+function buildWavePath(){
+  const steps=120, dx=BODY_W/steps;
+  let d=`M ${BODY_X} ${waveY(0,PHASE)-SCARF_H/2}`;
+  for(let i=1;i<=steps;i++){const x=BODY_X+i*dx; d+=` L ${x} ${waveY(i*dx,PHASE)-SCARF_H/2}`;}
+  for(let i=steps;i>=0;i--){const x=BODY_X+i*dx; d+=` L ${x} ${waveY(i*dx,PHASE)+SCARF_H/2}`;}
+  return d+' Z';
+}
+function buildWaveEdge(edge){
+  const steps=120, dx=BODY_W/steps, sign=edge==='top'?-1:1;
+  let d=`M ${BODY_X} ${waveY(0,PHASE)+sign*SCARF_H/2}`;
+  for(let i=1;i<=steps;i++){const x=BODY_X+i*dx; d+=` L ${x} ${waveY(i*dx,PHASE)+sign*SCARF_H/2}`;}
+  return d;
+}
+
+// ── RENDER PROJECT SCARF ──
+let _segments = [];
+
+function renderScarf(){
+  const totalRows = projects.reduce((s,p)=>s+p.total,0);
+  const svg = document.getElementById('scarf-svg');
+  const defs = svg.querySelector('defs');
+  while(defs.children.length>1) defs.removeChild(defs.lastChild);
+  ['bands-group','stitch-overlay','fringe-left-svg','fringe-right-svg'].forEach(id=>{
+    const g=document.getElementById(id); while(g.firstChild) g.removeChild(g.firstChild);
+  });
+  const waveD = buildWavePath();
+  const globalClip = ns('clipPath'); globalClip.setAttribute('id','global-wave-clip');
+  const gcP = ns('path'); gcP.setAttribute('d',waveD); globalClip.appendChild(gcP); defs.appendChild(globalClip);
+  const segments = [];
+  let curX = BODY_X;
+  projects.forEach(p=>{
+    const doneW = Math.max(3, Math.round((p.rows/totalRows)*BODY_W));
+    const remW  = Math.max(2, Math.round(((p.total-p.rows)/totalRows)*BODY_W));
+    if(doneW>0) segments.push({x:curX, w:doneW, color:p.color, rem:false, project:p});
+    curX += doneW;
+    if(p.pct<100 && remW>0) segments.push({x:curX, w:remW, color:p.color, rem:true, project:p});
+    curX += remW;
+  });
+  _segments = segments;
+  const bandsGroup = document.getElementById('bands-group');
+  const stitchOverlay = document.getElementById('stitch-overlay');
+  stitchOverlay.setAttribute('clip-path','url(#global-wave-clip)');
+  segments.forEach((seg,i)=>{
+    const clipId=`sc${i}`;
+    const cp=ns('clipPath'); cp.setAttribute('id',clipId);
+    const cr=ns('rect'); cr.setAttribute('x',seg.x); cr.setAttribute('y',0); cr.setAttribute('width',seg.w); cr.setAttribute('height',H);
+    cp.appendChild(cr); defs.appendChild(cp);
+    const bp=ns('path'); bp.setAttribute('d',waveD); bp.setAttribute('fill',seg.color);
+    bp.setAttribute('clip-path',`url(#${clipId})`);
+    if(seg.rem){
+      bp.setAttribute('fill-opacity','0.5');
+      const hId=`hp${i}`, pat=ns('pattern');
+      pat.setAttribute('id',hId); pat.setAttribute('x','0'); pat.setAttribute('y','0');
+      pat.setAttribute('width','7'); pat.setAttribute('height','7');
+      pat.setAttribute('patternUnits','userSpaceOnUse'); pat.setAttribute('patternTransform','rotate(45)');
+      const ln=ns('line'); ln.setAttribute('x1','0'); ln.setAttribute('y1','0'); ln.setAttribute('x2','0'); ln.setAttribute('y2','7');
+      ln.setAttribute('stroke','rgba(255,255,255,0.22)'); ln.setAttribute('stroke-width','2');
+      pat.appendChild(ln); defs.appendChild(pat);
+      const hp=ns('path'); hp.setAttribute('d',waveD); hp.setAttribute('fill',`url(#${hId})`);
+      hp.setAttribute('clip-path',`url(#${clipId})`);
+      bandsGroup.appendChild(bp); bandsGroup.appendChild(hp);
+    } else {
+      bandsGroup.appendChild(bp);
+      const sr=ns('rect'); sr.setAttribute('x',seg.x); sr.setAttribute('y',0); sr.setAttribute('width',seg.w); sr.setAttribute('height',H);
+      sr.setAttribute('fill','url(#stitch-pat)'); sr.setAttribute('clip-path',`url(#${clipId})`);
+      stitchOverlay.appendChild(sr);
+    }
+  });
+  document.getElementById('wave-top-line').setAttribute('d', buildWaveEdge('top'));
+  document.getElementById('wave-bot-line').setAttribute('d', buildWaveEdge('bot'));
+  const leftEdgeY = waveY(0,PHASE);
+  const fringeSpacing = SCARF_H/19;
+  const fringeLeftG = document.getElementById('fringe-left-svg');
+  for(let i=0;i<20;i++){
+    const l=ns('line'); const fy=leftEdgeY-SCARF_H/2+i*fringeSpacing;
+    l.setAttribute('x1',BODY_X); l.setAttribute('y1',fy); l.setAttribute('x2',BODY_X-FRINGE_W); l.setAttribute('y2',fy);
+    l.setAttribute('stroke',projects[0].color); l.setAttribute('stroke-width','2.5'); l.setAttribute('stroke-linecap','round'); l.setAttribute('opacity','0.8');
+    fringeLeftG.appendChild(l);
+  }
+  const rightEdgeY = waveY(BODY_W,PHASE);
+  const endX = BODY_X+BODY_W;
+  const fringeRColor = projects[projects.length-1]?.color || '#ccc';
+  const fringeRightG = document.getElementById('fringe-right-svg');
+  for(let i=0;i<20;i++){
+    const l=ns('line'); const fy=rightEdgeY-SCARF_H/2+i*fringeSpacing;
+    l.setAttribute('x1',endX); l.setAttribute('y1',fy); l.setAttribute('x2',endX+FRINGE_W); l.setAttribute('y2',fy);
+    l.setAttribute('stroke',fringeRColor); l.setAttribute('stroke-width','2.5'); l.setAttribute('stroke-linecap','round'); l.setAttribute('opacity','0.8');
+    fringeRightG.appendChild(l);
+  }
+}
+
+// ── RENDER STATUS SCARF ──
+function renderStatusScarf() {
+  const svg = document.getElementById('status-scarf-svg');
+  svg.innerHTML = '';
+  const totalRows = projects.reduce((s,p)=>s+p.total,0);
+  if (!totalRows) return;
+  const defs = ns('defs');
+  const sp = ns('pattern'); sp.setAttribute('id','sstitch'); sp.setAttribute('x','0'); sp.setAttribute('y','0'); sp.setAttribute('width','6'); sp.setAttribute('height','6'); sp.setAttribute('patternUnits','userSpaceOnUse');
+  const sl = ns('line'); sl.setAttribute('x1','3'); sl.setAttribute('y1','0'); sl.setAttribute('x2','3'); sl.setAttribute('y2','6'); sl.setAttribute('stroke','rgba(255,255,255,0.14)'); sl.setAttribute('stroke-width','1'); sp.appendChild(sl); defs.appendChild(sp);
+  ['active','paused','done'].forEach(st=>{
+    const hid='shatch-'+st;
+    const hp=ns('pattern'); hp.setAttribute('id',hid); hp.setAttribute('x','0'); hp.setAttribute('y','0'); hp.setAttribute('width','7'); hp.setAttribute('height','7'); hp.setAttribute('patternUnits','userSpaceOnUse'); hp.setAttribute('patternTransform','rotate(45)');
+    const hl=ns('line'); hl.setAttribute('x1','0'); hl.setAttribute('y1','0'); hl.setAttribute('x2','0'); hl.setAttribute('y2','7'); hl.setAttribute('stroke','rgba(255,255,255,0.25)'); hl.setAttribute('stroke-width','2'); hp.appendChild(hl); defs.appendChild(hp);
+  });
+  const waveD = buildWavePath();
+  const gc=ns('clipPath'); gc.setAttribute('id','sgwc');
+  const gcp=ns('path'); gcp.setAttribute('d',waveD); gc.appendChild(gcp); defs.appendChild(gc);
+  svg.appendChild(defs);
+  const bandsG=ns('g'); const stitchG=ns('g'); stitchG.setAttribute('clip-path','url(#sgwc)'); const divG=ns('g');
+  const ORDER=['active','paused','done'];
+  let curX=BODY_X, segIdx=0;
+  ORDER.forEach((st,oi)=>{
+    const col=STATUS_COLOR[st];
+    projects.filter(p=>p.status===st).forEach(p=>{
+      const doneW=Math.max(3,Math.round((p.rows/totalRows)*BODY_W));
+      const remW=Math.max(2,Math.round(((p.total-p.rows)/totalRows)*BODY_W));
+      if(doneW>0){
+        const id='ssc'+segIdx++;
+        const cp=ns('clipPath'); cp.setAttribute('id',id);
+        const cr=ns('rect'); cr.setAttribute('x',curX); cr.setAttribute('y',0); cr.setAttribute('width',doneW); cr.setAttribute('height',H);
+        cp.appendChild(cr); defs.appendChild(cp);
+        const bp=ns('path'); bp.setAttribute('d',waveD); bp.setAttribute('fill',col); bp.setAttribute('clip-path','url(#'+id+')');
+        bandsG.appendChild(bp);
+        const sr=ns('rect'); sr.setAttribute('x',curX); sr.setAttribute('y',0); sr.setAttribute('width',doneW); sr.setAttribute('height',H); sr.setAttribute('fill','url(#sstitch)'); sr.setAttribute('clip-path','url(#'+id+')');
+        stitchG.appendChild(sr); curX+=doneW;
+      }
+      if(p.total>p.rows && remW>0){
+        const id='ssc'+segIdx++;
+        const cp=ns('clipPath'); cp.setAttribute('id',id);
+        const cr=ns('rect'); cr.setAttribute('x',curX); cr.setAttribute('y',0); cr.setAttribute('width',remW); cr.setAttribute('height',H);
+        cp.appendChild(cr); defs.appendChild(cp);
+        const bp=ns('path'); bp.setAttribute('d',waveD); bp.setAttribute('fill',col); bp.setAttribute('fill-opacity','0.45'); bp.setAttribute('clip-path','url(#'+id+')');
+        bandsG.appendChild(bp);
+        const hp=ns('path'); hp.setAttribute('d',waveD); hp.setAttribute('fill','url(#shatch-'+st+')'); hp.setAttribute('clip-path','url(#'+id+')');
+        bandsG.appendChild(hp); curX+=remW;
+      }
+    });
+    if(oi<ORDER.length-1 && curX>BODY_X){
+      const did='sdiv'+oi;
+      const cp=ns('clipPath'); cp.setAttribute('id',did);
+      const cr=ns('rect'); cr.setAttribute('x',curX-1); cr.setAttribute('y',0); cr.setAttribute('width',2); cr.setAttribute('height',H);
+      cp.appendChild(cr); defs.appendChild(cp);
+      const dl=ns('path'); dl.setAttribute('d',waveD); dl.setAttribute('fill','rgba(255,255,255,0.6)'); dl.setAttribute('clip-path','url(#'+did+')');
+      divG.appendChild(dl);
+    }
+  });
+  svg.appendChild(bandsG); svg.appendChild(stitchG); svg.appendChild(divG);
+  const et=ns('path'); et.setAttribute('d',buildWaveEdge('top')); et.setAttribute('fill','none'); et.setAttribute('stroke','rgba(0,0,0,0.07)'); et.setAttribute('stroke-width','1');
+  const eb=ns('path'); eb.setAttribute('d',buildWaveEdge('bot')); eb.setAttribute('fill','none'); eb.setAttribute('stroke','rgba(0,0,0,0.07)'); eb.setAttribute('stroke-width','1');
+  svg.appendChild(et); svg.appendChild(eb);
+  const fsp=SCARF_H/19;
+  const leftG=ns('g'); const ley=waveY(0,PHASE);
+  for(let i=0;i<20;i++){
+    const l=ns('line'); const fy=ley-SCARF_H/2+i*fsp;
+    l.setAttribute('x1',BODY_X); l.setAttribute('y1',fy); l.setAttribute('x2',BODY_X-FRINGE_W); l.setAttribute('y2',fy);
+    l.setAttribute('stroke',STATUS_COLOR.active); l.setAttribute('stroke-width','2.5'); l.setAttribute('stroke-linecap','round'); l.setAttribute('opacity','0.8');
+    leftG.appendChild(l);
+  }
+  svg.appendChild(leftG);
+  const rightG=ns('g'); const rey=waveY(BODY_W,PHASE); const endX=BODY_X+BODY_W;
+  for(let i=0;i<20;i++){
+    const l=ns('line'); const fy=rey-SCARF_H/2+i*fsp;
+    l.setAttribute('x1',endX); l.setAttribute('y1',fy); l.setAttribute('x2',endX+FRINGE_W); l.setAttribute('y2',fy);
+    l.setAttribute('stroke',STATUS_COLOR.done); l.setAttribute('stroke-width','2.5'); l.setAttribute('stroke-linecap','round'); l.setAttribute('opacity','0.8');
+    rightG.appendChild(l);
+  }
+  svg.appendChild(rightG);
+  const doneRows=projects.reduce((s,p)=>s+p.rows,0);
+  const pct=totalRows>0?Math.round(doneRows/totalRows*100):0;
+  const active=projects.filter(p=>p.status==='active');
+  const paused=projects.filter(p=>p.status==='paused');
+  const done=projects.filter(p=>p.status==='done');
+  document.getElementById('status-scarf-caption').textContent =
+    `${pct}% overall · ${active.length} active · ${paused.length} paused · ${done.length} complete`;
+}
+
+function renderStatusLists() {
+  ['active','paused','done'].forEach(st=>{
+    const col=STATUS_COLOR[st];
+    const el=document.getElementById('status-list-'+st);
+    el.innerHTML='';
+    projects.filter(p=>p.status===st).forEach(p=>{
+      const pct=p.total>0?Math.round(p.rows/p.total*100):0;
+      const row=document.createElement('div'); row.className='status-proj-row';
+      row.innerHTML=`<div class="status-proj-swatch" style="background:${col}"></div>
+        <span class="status-proj-name">${p.name}</span>
+        <span class="status-proj-meta">${p.rows}/${p.total} · ${pct}%</span>`;
+      el.appendChild(row);
+    });
+  });
+}
+
+function renderStatusView() { renderStatusScarf(); renderStatusLists(); }
+
+// ── TOOLTIPS ──
+const tooltip = document.getElementById('tooltip');
+
+document.getElementById('status-scarf-svg').addEventListener('mousemove', e=>{
+  const rect=e.currentTarget.getBoundingClientRect();
+  const svgX=(e.clientX-rect.left)/rect.width*W;
+  let found=null;
+  for(const seg of _segments){ if(svgX>=seg.x && svgX<seg.x+seg.w){ found=seg; break; } }
+  if(found){
+    const p=found.project, pct=p.total>0?Math.round(p.rows/p.total*100):0;
+    tooltip.textContent=found.rem?`${p.name} — ${pct}% done (${p.total-p.rows} rows remaining)`:`${p.name} — ${pct}% done`;
+    tooltip.style.opacity='1'; tooltip.style.left=(e.clientX+14)+'px'; tooltip.style.top=(e.clientY-32)+'px';
+  } else { tooltip.style.opacity='0'; }
+});
+document.getElementById('status-scarf-svg').addEventListener('mouseleave',()=>tooltip.style.opacity='0');
+
+// ── RENDER STATS ──
+function renderStats(){
+  const totalRows=projects.reduce((s,p)=>s+p.total,0);
+  const doneRows=projects.reduce((s,p)=>s+p.rows,0);
+  const active=projects.filter(p=>p.status==='active').length;
+  const paused=projects.filter(p=>p.status==='paused').length;
+  const done=projects.filter(p=>p.status==='done').length;
+  document.getElementById('total-pct').textContent=totalRows>0?Math.round(doneRows/totalRows*100)+'%':'0%';
+  document.getElementById('total-rows').textContent=doneRows;
+  document.getElementById('total-note').textContent='of '+totalRows+' total';
+  document.getElementById('stat-done').textContent=done+'/'+projects.length;
+  document.getElementById('stat-breakdown').textContent=active+' active · '+paused+' paused';
+  document.getElementById('ftr-text').textContent=`${projects.length} projects · ${active} active · ${paused} paused · ${done} complete`;
+}
+
+// ── DEADLINE HELPERS ──
+function deadlineDays(deadline){
+  if(!deadline) return null;
+  const now=new Date(); now.setHours(0,0,0,0);
+  return Math.round((new Date(deadline+'T00:00:00')-now)/(1000*60*60*24));
+}
+function deadlineBadge(p){
+  if(!p.deadline||p.status==='done') return '';
+  const days=deadlineDays(p.deadline);
+  let cls='deadline-badge', txt;
+  if(days<0){ cls+=' overdue'; txt=`${Math.abs(days)}d overdue`; }
+  else if(days===0){ cls+=' soon'; txt='Due today'; }
+  else if(days<=7){ cls+=' soon'; txt=`${days}d left`; }
+  else { txt=`${days}d left`; }
+  return `<span class="${cls}">${txt}</span>`;
+}
+
+// ── RENDER SIDEBAR LIST ──
+let dragSrcIdx=null;
+function renderList(){
+  const list=document.getElementById('project-list');
+  list.innerHTML='';
+  projects.forEach((p,i)=>{
+    const pct=p.total>0?Math.round(p.rows/p.total*100):0;
+    const pillC=p.status==='active'?'p-active':p.status==='paused'?'p-paused':'p-done';
+    const pillL=p.status==='active'?'Active':p.status==='paused'?'Paused':'Done';
+    const row=document.createElement('div');
+    row.className='project-row'; row.draggable=true; row.dataset.idx=i;
+    row.innerHTML=`<span class="drag-handle" title="Drag to reorder">⠿</span>
+      <span class="swatch" style="background:${p.color}" data-idx="${i}" title="Change color"></span>
+      <span class="project-name">${p.name}</span>
+      <div class="project-right">
+        <span class="project-rows">${p.rows}/${p.total}</span>
+        ${deadlineBadge(p)}
+        <div class="bar-wrap"><div class="bar-fill" style="width:${pct}%;background:${p.color}"></div></div>
+        <span class="pill ${pillC}" data-idx="${i}" title="Click to cycle status">${pillL}</span>
+      </div>`;
+    row.addEventListener('click',e=>{ if(e.target.classList.contains('pill')||e.target.classList.contains('swatch')) return; openEditModal(i); });
+    row.querySelector('.pill').addEventListener('click',e=>{ e.stopPropagation(); cycleStatus(i); });
+    row.querySelector('.swatch').addEventListener('click',e=>{ e.stopPropagation(); openColorPicker(i,e.currentTarget); });
+    row.addEventListener('dragstart',e=>{ dragSrcIdx=i; row.classList.add('dragging'); e.dataTransfer.effectAllowed='move'; });
+    row.addEventListener('dragend',()=>{ row.classList.remove('dragging'); document.querySelectorAll('.project-row').forEach(r=>r.classList.remove('drag-over')); });
+    row.addEventListener('dragover',e=>{ e.preventDefault(); row.classList.add('drag-over'); });
+    row.addEventListener('dragleave',()=>row.classList.remove('drag-over'));
+    row.addEventListener('drop',e=>{ e.preventDefault(); row.classList.remove('drag-over'); if(dragSrcIdx!==null&&dragSrcIdx!==i){ const moved=projects.splice(dragSrcIdx,1)[0]; projects.splice(i,0,moved); render(); } });
+    list.appendChild(row);
+  });
+}
+
+function cycleStatus(i){
+  const cycle={active:'paused',paused:'done',done:'active'};
+  projects[i].status=cycle[projects[i].status];
+  if(projects[i].status==='done'){ projects[i].rows=projects[i].total; projects[i].pct=100; }
+  render();
+}
+
+// ── COLOR PICKER ──
+const colorPopover=document.getElementById('color-popover');
+let colorPickerIdx=null;
+function openColorPicker(idx,anchor){
+  colorPickerIdx=idx;
+  const grid=colorPopover.querySelector('div'); grid.innerHTML='';
+  PALETTE.forEach(c=>{
+    const btn=document.createElement('div');
+    btn.style.cssText=`width:24px;height:24px;border-radius:4px;background:${c};cursor:pointer;border:2px solid ${c===projects[idx].color?'#333':'transparent'}`;
+    btn.addEventListener('click',()=>{ projects[colorPickerIdx].color=c; closeColorPicker(); render(); });
+    grid.appendChild(btn);
+  });
+  const ci=document.createElement('input'); ci.type='color'; ci.value=projects[idx].color;
+  ci.style.cssText='width:24px;height:24px;border-radius:4px;cursor:pointer;border:none;padding:0;background:none'; ci.title='Custom color';
+  ci.addEventListener('input',e=>{ projects[colorPickerIdx].color=e.target.value; render(); });
+  grid.appendChild(ci);
+  const rect=anchor.getBoundingClientRect();
+  colorPopover.style.display='block'; colorPopover.style.left=rect.left+'px'; colorPopover.style.top=(rect.bottom+6)+'px';
+}
+function closeColorPicker(){ colorPopover.style.display='none'; colorPickerIdx=null; }
+document.addEventListener('click',e=>{ if(!colorPopover.contains(e.target)&&!e.target.classList.contains('swatch')) closeColorPicker(); });
+
+// ── EDIT MODAL ──
+let editIdx=-1;
+function openEditModal(i){
+  editIdx=i; const p=projects[i];
+  document.getElementById('modal-title').textContent=p.name;
+  document.getElementById('modal-name').value=p.name;
+  const slider=document.getElementById('modal-slider'); slider.max=p.total; slider.value=p.rows;
+  document.getElementById('modal-readout').textContent=p.rows+' / '+p.total+' rows';
+  document.getElementById('modal-status').value=p.status;
+  document.getElementById('modal-date').value=p.deadline||'';
+  document.getElementById('modal-backdrop').classList.add('open');
+}
+document.getElementById('modal-slider').addEventListener('input',e=>{
+  document.getElementById('modal-readout').textContent=parseInt(e.target.value)+' / '+projects[editIdx].total+' rows';
+});
+document.getElementById('modal-cancel').addEventListener('click',()=>document.getElementById('modal-backdrop').classList.remove('open'));
+document.getElementById('modal-delete').addEventListener('click',()=>{
+  if(projects.length<=1){ alert("Can't delete the last project!"); return; }
+  projects.splice(editIdx,1); document.getElementById('modal-backdrop').classList.remove('open'); render();
+});
+document.getElementById('modal-save').addEventListener('click',()=>{
+  const v=parseInt(document.getElementById('modal-slider').value);
+  const p=projects[editIdx]; const oldRows=p.rows;
+  p.name=document.getElementById('modal-name').value.trim()||p.name;
+  p.rows=v; p.pct=p.total>0?Math.round(v/p.total*100):0;
+  p.status=document.getElementById('modal-status').value;
+  p.deadline=document.getElementById('modal-date').value||null;
+  if(v>=p.total){ p.status='done'; p.pct=100; p.rows=p.total; }
+  if(v!==oldRows){ log.unshift({date:new Date(),name:p.name,color:p.color,oldRows,newRows:v}); }
+  document.getElementById('modal-backdrop').classList.remove('open'); render();
+});
+
+// ── ADD MODAL ──
+document.getElementById('add-total-slider').addEventListener('input',e=>{
+  document.getElementById('add-total-readout').textContent=parseInt(e.target.value)+' rows';
+});
+document.getElementById('add-proj-btn').addEventListener('click',()=>{
+  document.getElementById('add-backdrop').classList.add('open');
+  document.getElementById('add-name').value='';
+  document.getElementById('add-color').value=PALETTE[projects.length%PALETTE.length];
+  document.getElementById('add-total-slider').value=150;
+  document.getElementById('add-total-readout').textContent='150 rows';
+  document.getElementById('add-date').value='';
+});
+document.getElementById('add-cancel').addEventListener('click',()=>document.getElementById('add-backdrop').classList.remove('open'));
+document.getElementById('add-save').addEventListener('click',()=>{
+  const name=document.getElementById('add-name').value.trim()||'New project';
+  const color=document.getElementById('add-color').value;
+  const total=parseInt(document.getElementById('add-total-slider').value);
+  const deadline=document.getElementById('add-date').value||null;
+  projects.push({name,pct:0,status:'active',color,rows:0,total,deadline});
+  document.getElementById('add-backdrop').classList.remove('open'); render();
+});
+
+// ── PROJECT VIEW TOOLTIP ──
+const scarfSVG=document.getElementById('scarf-svg');
+scarfSVG.addEventListener('mousemove',e=>{
+  const rect=scarfSVG.getBoundingClientRect();
+  const svgX=(e.clientX-rect.left)/rect.width*W;
+  let found=null;
+  for(const seg of _segments){ if(svgX>=seg.x&&svgX<seg.x+seg.w){ found=seg; break; } }
+  if(found){
+    const p=found.project, pct=p.total>0?Math.round(p.rows/p.total*100):0;
+    const deadlineStr=p.deadline?` · ${deadlineDays(p.deadline)===0?'Due today':deadlineDays(p.deadline)<0?Math.abs(deadlineDays(p.deadline))+'d overdue':deadlineDays(p.deadline)+'d left'}`:'';
+    tooltip.textContent=found.rem?`${p.name} — ${pct}% done (${p.total-p.rows} rows remaining${deadlineStr})`:`${p.name} — ${pct}% done${deadlineStr}`;
+    tooltip.style.opacity='1'; tooltip.style.left=(e.clientX+14)+'px'; tooltip.style.top=(e.clientY-32)+'px';
+  } else { tooltip.style.opacity='0'; }
+});
+scarfSVG.addEventListener('mouseleave',()=>tooltip.style.opacity='0');
+
+// ── ROW LOG ──
+let logOpen=false;
+document.getElementById('log-toggle').addEventListener('click',()=>{
+  logOpen=!logOpen;
+  document.getElementById('log-entries-wrap').style.display=logOpen?'block':'none';
+  document.getElementById('log-arrow').textContent=logOpen?'▾':'▸';
+  renderLog();
+});
+function renderLog(){
+  const el=document.getElementById('log-entries');
+  if(!log.length){ el.innerHTML='<div style="font-size:12px;color:var(--brown-muted);padding:8px 0">No row updates yet. Edit a project to start tracking.</div>'; return; }
+  el.innerHTML='';
+  log.slice(0,30).forEach(entry=>{
+    const d=entry.date;
+    const dateStr=d.toLocaleDateString(undefined,{month:'short',day:'numeric'})+' '+d.toLocaleTimeString(undefined,{hour:'2-digit',minute:'2-digit'});
+    const delta=entry.newRows-entry.oldRows;
+    const row=document.createElement('div'); row.className='log-entry';
+    row.innerHTML=`<div class="log-dot" style="background:${entry.color}"></div>
+      <span class="log-name">${entry.name}</span>
+      <span class="log-delta">${delta>0?'+'+delta:delta} rows (${entry.newRows} total)</span>
+      <span class="log-date">${dateStr}</span>`;
+    el.appendChild(row);
+  });
+}
+
+// ── EDITABLE DESCRIPTION ──
+const descEl=document.getElementById('header-desc');
+const PLACEHOLDER_TEXT='Your description here — click to edit and tell visitors what this tracker is about.';
+descEl.addEventListener('focus',()=>{ if(descEl.classList.contains('placeholder')){ descEl.textContent=''; descEl.classList.remove('placeholder'); } });
+descEl.addEventListener('blur',()=>{ if(!descEl.textContent.trim()){ descEl.textContent=PLACEHOLDER_TEXT; descEl.classList.add('placeholder'); } });
+
+// ── MAIN RENDER ──
+function render(){ renderScarf(); renderStats(); renderList(); if(logOpen) renderLog(); if(currentView==='status') renderStatusView(); }
+render();
+</script>
+</body>
+</html>
