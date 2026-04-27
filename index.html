@@ -229,7 +229,7 @@ html, body { font-family: 'DM Mono', monospace; background: var(--cream); color:
     <div class="header-center">
       <h1 class="header-title">From Start To Knit</h1>
       <div class="header-meta">Knitting progress tracker</div>
-      <p class="header-desc placeholder" id="header-desc" contenteditable="true">Your description here — click to edit and tell visitors what this tracker is about.</p>
+      <p class="header-desc placeholder" id="header-desc">Following my college graduation, I was looking to take up a new hobby. Something both practical and creative. I began my knitting journey starting with dish clothes and scarves and slowing progressing to sweaters and lace. I created From Start to Knit to keep track of my knitting progress and document my projects. I hope to encourage others to record their hobbies and share what they've learned.</p>
     </div>
     <div class="header-needles">
       <svg class="needle-svg" width="90" height="48" viewBox="0 0 90 48">
@@ -397,7 +397,6 @@ html, body { font-family: 'DM Mono', monospace; background: var(--cream); color:
 <div id="color-popover" style="display:none;position:fixed;z-index:600;background:var(--cream);border:0.5px solid var(--border);border-radius:8px;padding:10px;box-shadow:0 8px 24px rgba(0,0,0,0.14)">
   <div style="display:flex;flex-wrap:wrap;gap:6px;width:132px"></div>
 </div>
-
 <script>
 const PALETTE = ['#FA003F','#378ADD','#FF69B4','#222222','#7F77DD','#E07B39','#D4537E','#639922','#FFA500','#c0a882','#e07b39','#2e86ab'];
 const STATUS_COLOR = { active: '#FF69B4', paused: '#FFA500', done: '#639922' };
@@ -829,11 +828,7 @@ function renderLog(){
   });
 }
 
-// ── EDITABLE DESCRIPTION ──
-const descEl=document.getElementById('header-desc');
-const PLACEHOLDER_TEXT='Your description here — click to edit and tell visitors what this tracker is about.';
-descEl.addEventListener('focus',()=>{ if(descEl.classList.contains('placeholder')){ descEl.textContent=''; descEl.classList.remove('placeholder'); } });
-descEl.addEventListener('blur',()=>{ if(!descEl.textContent.trim()){ descEl.textContent=PLACEHOLDER_TEXT; descEl.classList.add('placeholder'); } });
+
 
 // ── MAIN RENDER ──
 function render(){ renderScarf(); renderStats(); renderList(); if(logOpen) renderLog(); if(currentView==='status') renderStatusView(); }
