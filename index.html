@@ -16,9 +16,9 @@
   --brown-faint: #9b9b8c;
   --border: rgba(26,26,24,0.13);
   --border-faint: rgba(26,26,24,0.07);
-  --status-active: #FF69B4;
+  --status-active: #639922;
   --status-paused: #FF8500;
-  --status-done: #639922;
+  --status-done: #99225f;
 }
 html, body { font-family: 'DM Mono', monospace; background: var(--cream); color: var(--brown); min-height: 100%; }
 .page { display: flex; flex-direction: column; min-height: 100vh; }
@@ -34,15 +34,14 @@ html, body { font-family: 'DM Mono', monospace; background: var(--cream); color:
 .needle-svg { display: block; }
 .header-center { display: flex; flex-direction: column; align-items: center; gap: 0.3rem; }
 .header-title { font-size: clamp(1.8rem,4vw,3rem); font-weight: 400; letter-spacing: -0.01em; }
-.header-meta { font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--brown-muted); }
+.header-meta { font-size: 20px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--brown-muted); }
 .header-desc {
-  font-size: 12px; color: var(--brown-muted); font-family: 'Lora', serif;
-  font-style: italic; text-align: center; max-width: 340px; line-height: 1.6; margin-top: 0.2rem;
+  font-size: 15px; color: var(--brown-muted); font-family: 'Lora', serif;
+  font-style: italic; text-align: center; max-width: 400px; line-height: 1.6; margin-top: 0.2rem;
   cursor: text; outline: none; border-bottom: 1px dashed transparent; transition: border-color .2s;
 }
 .header-desc:hover { border-bottom-color: var(--brown-muted); }
 .header-desc:focus { border-bottom-color: var(--brown-light); font-style: normal; color: var(--brown); }
-.header-desc.placeholder { opacity: 0.5; }
 
 /* ── VIEW TOGGLE ── */
 .view-toggle {
@@ -51,18 +50,19 @@ html, body { font-family: 'DM Mono', monospace; background: var(--cream); color:
   border-bottom: 0.5px solid var(--border); background: var(--cream);
 }
 .view-btn {
-  font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+  font-family: 'DM Mono', monospace; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase;
   color: var(--brown-muted); background: transparent; border: 0.5px solid var(--border);
   cursor: pointer; padding: 5px 16px; transition: background .15s, color .15s; line-height: 1.6;
 }
 .view-btn:first-child { border-radius: 6px 0 0 6px; border-right: none; }
-.view-btn:last-child  { border-radius: 0 6px 6px 0; border-left: none; }
+.view-btn:last-child  { border-radius: 0 6px 6px 0; }
+.view-btn:not(:first-child):not(:last-child) { border-left: none; border-right: none; }
 .view-btn.active { background: var(--brown-light); color: #fff; border-color: var(--brown-light); }
 .view-btn:not(.active):hover { background: rgba(0,0,0,0.05); }
 
 /* ── LAYOUT ── */
 .content {
-  display: grid; grid-template-columns: 1fr 290px;
+  display: grid; grid-template-columns: 1fr 310px;
   grid-template-areas: "main sidebar"; flex: 1;
 }
 @media (max-width: 700px) {
@@ -87,19 +87,17 @@ html, body { font-family: 'DM Mono', monospace; background: var(--cream); color:
 }
 .stat-block { flex: 1; padding-right: 2rem; border-right: 0.5px solid var(--border-faint); margin-right: 2rem; }
 .stat-block:last-child { border-right: none; padding-right: 0; margin-right: 0; }
-.stat-label { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--brown-muted); display: block; margin-bottom: 4px; }
+.stat-label { font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--brown-muted); display: block; margin-bottom: 4px; }
 .stat-val { font-family: 'Lora', serif; font-size: 2.2rem; font-weight: 400; line-height: 1; display: block; margin-bottom: 4px; }
-.stat-note { font-size: 11px; color: var(--brown-muted); display: block; }
-
+.stat-note { font-size: 12px; color: var(--brown-muted); display: block; }
 .footer-row {
-  font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+  font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase;
   color: var(--brown-faint);
   border-top: 0.5px solid var(--border-faint); padding-top: 0.8rem;
 }
-
 .log-toggle {
   display: flex; align-items: center; justify-content: space-between;
-  font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+  font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase;
   color: var(--brown-muted); cursor: pointer;
   margin-top: 1.5rem; padding-top: 1rem;
   border-top: 0.5px solid var(--border-faint); user-select: none;
@@ -115,31 +113,24 @@ html, body { font-family: 'DM Mono', monospace; background: var(--cream); color:
 
 /* ── STATUS VIEW ── */
 #view-status { display: none; flex-direction: column; gap: 0; }
-
-/* caption mirrors footer-row */
 .status-caption-row {
-  font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+  font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase;
   color: var(--brown-faint);
   border-top: 0.5px solid var(--border-faint);
-  padding-top: 0.8rem;
-  margin-bottom: 1.5rem;
+  padding-top: 0.8rem; margin-bottom: 1.5rem;
 }
-
-/* legend mirrors stats-section top border + padding */
 .status-legend {
   display: flex; gap: 16px; flex-wrap: wrap;
   border-top: 0.5px solid var(--border-faint);
-  padding-top: 1.2rem;
-  margin-bottom: 1.5rem;
+  padding-top: 1.2rem; margin-bottom: 1.5rem;
 }
-.legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--brown-muted); }
+.legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--brown-muted); }
 .legend-swatch { width: 12px; height: 12px; border-radius: 2px; flex-shrink: 0; border: 0.5px solid rgba(0,0,0,0.1); }
-
 .status-sections { display: flex; flex-direction: column; gap: 0; }
 .status-group { margin-bottom: 1.2rem; }
 .status-group:last-child { margin-bottom: 0; }
 .status-section-label {
-  font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+  font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase;
   color: var(--brown-muted); margin-bottom: 6px;
   display: flex; align-items: center; gap: 8px;
 }
@@ -147,7 +138,60 @@ html, body { font-family: 'DM Mono', monospace; background: var(--cream); color:
 .status-proj-row { display: flex; align-items: center; gap: 9px; padding: 4px 5px; font-size: 12px; }
 .status-proj-swatch { width: 9px; height: 9px; border-radius: 2px; flex-shrink: 0; border: 0.5px solid rgba(0,0,0,0.1); }
 .status-proj-name { flex: 1; color: var(--brown); }
-.status-proj-meta { color: var(--brown-muted); font-size: 11px; }
+.status-proj-meta { color: var(--brown-muted); font-size: 12px; }
+
+/* ── TIMELINE VIEW ── */
+#view-timeline { display: none; flex-direction: column; gap: 0; }
+.timeline-caption-row {
+  font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--brown-faint);
+  border-top: 0.5px solid var(--border-faint);
+  padding-top: 0.8rem; margin-bottom: 1.5rem;
+}
+.timeline-legend {
+  display: flex; gap: 16px; flex-wrap: wrap;
+  border-top: 0.5px solid var(--border-faint);
+  padding-top: 1.2rem; margin-bottom: 1.5rem;
+}
+.tl-proj-section-label {
+  font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--brown-muted); margin-bottom: 6px; margin-top: 1.2rem;
+  display: flex; align-items: center; gap: 8px;
+}
+.tl-proj-section-label::after { content:''; flex:1; height:0.5px; background: var(--border); }
+.timeline-proj-list { display: flex; flex-direction: column; gap: 0; }
+.timeline-proj-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 5px 5px; border-bottom: 0.5px solid var(--border-faint);
+  font-size: 12px; cursor: pointer; border-radius: 4px; transition: background .12s;
+}
+.timeline-proj-row:hover { background: rgba(0,0,0,0.04); }
+.timeline-proj-row:last-child { border-bottom: none; }
+.tl-swatch { width: 9px; height: 9px; border-radius: 2px; flex-shrink: 0; border: 0.5px solid rgba(0,0,0,0.1); }
+.tl-name { flex: 1; color: var(--brown); }
+.tl-dates { color: var(--brown-muted); font-size: 12px; white-space: nowrap; }
+.tl-skill-badges { display: flex; gap: 4px; flex-wrap: wrap; }
+.tl-skill-badge {
+  font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 1px 5px; border-radius: 8px; background: rgba(122,92,58,0.10); color: var(--brown-muted);
+  border: 0.5px solid var(--border-faint); white-space: nowrap;
+}
+.skills-section { margin-top: 1.6rem; }
+.skills-section-label {
+  font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--brown-muted); margin-bottom: 8px;
+  display: flex; align-items: center; gap: 8px;
+}
+.skills-section-label::after { content:''; flex:1; height:0.5px; background: var(--border); }
+.skills-grid { display: flex; flex-wrap: wrap; gap: 6px; }
+.skill-pill {
+  font-size: 12px; letter-spacing: 0.09em; padding: 3px 10px; border-radius: 10px;
+  border: 0.5px solid var(--border); color: var(--brown-muted); background: rgba(255,255,255,0.4);
+  cursor: default; transition: background .12s;
+}
+.skill-pill.unlocked {
+  color: var(--brown); border-color: var(--brown-light); background: rgba(184,149,106,0.12);
+}
 
 /* ── SIDEBAR ── */
 .sidebar { grid-area: sidebar; border-left: 0.5px solid var(--border); padding: 1.6rem 1.4rem; display: flex; flex-direction: column; gap: 0; }
@@ -156,7 +200,7 @@ html, body { font-family: 'DM Mono', monospace; background: var(--cream); color:
 
 /* ── PROJECT ROW ── */
 .project-row {
-  display: flex; align-items: center; gap: 9px;
+  display: flex; align-items: flex-start; gap: 9px;
   padding: 7px 5px; border-bottom: 0.5px solid var(--border-faint);
   cursor: grab; user-select: none; border-radius: 4px; transition: background .12s; position: relative;
 }
@@ -164,14 +208,17 @@ html, body { font-family: 'DM Mono', monospace; background: var(--cream); color:
 .project-row:hover { background: rgba(0,0,0,0.04); }
 .project-row.dragging { opacity: 0.4; cursor: grabbing; }
 .project-row.drag-over { background: rgba(184,149,106,0.15); border-top: 1.5px solid var(--brown-light); }
-.drag-handle { font-size: 12px; color: var(--brown-muted); opacity: 0.4; cursor: grab; padding: 0 2px; flex-shrink: 0; }
-.swatch { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; border: 0.5px solid rgba(0,0,0,0.1); cursor: pointer; }
-.project-name { font-size: 12px; color: #1a1a18; flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.drag-handle { font-size: 12px; color: var(--brown-muted); opacity: 0.4; cursor: grab; padding: 0 2px; flex-shrink: 0; margin-top: 2px; }
+.swatch { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; border: 0.5px solid rgba(0,0,0,0.1); cursor: pointer; margin-top: 3px; }
+.project-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.project-name { font-size: 12px; color: #1a1a18; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.project-yarn { font-size: 12px; color: var(--brown-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 4px; }
+.yarn-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; border: 0.5px solid rgba(0,0,0,0.15); }
 .project-right { display: flex; flex-direction: column; align-items: flex-end; gap: 3px; flex-shrink: 0; }
 .project-rows { font-size: 12px; color: var(--brown-muted); }
 .bar-wrap { width: 54px; height: 3px; background: rgba(0,0,0,0.08); border-radius: 2px; overflow: hidden; }
 .bar-fill { height: 100%; border-radius: 2px; opacity: 0.75; transition: width .3s ease; }
-.pill { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; padding: 1px 6px; border-radius: 8px; cursor: pointer; transition: opacity .15s; }
+.pill { font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; padding: 1px 6px; border-radius: 8px; cursor: pointer; transition: opacity .15s; }
 .pill:hover { opacity: 0.7; }
 .p-active { background: #E1F5EE; color: #0F6E56; }
 .p-paused { background: #FAEEDA; color: #854F0B; }
@@ -187,12 +234,12 @@ html, body { font-family: 'DM Mono', monospace; background: var(--cream); color:
 .add-label { font-size: 12px; color: var(--brown-muted); }
 
 /* ── TOOLTIP ── */
-.tooltip { position: fixed; pointer-events: none; background: #3a2e1e; color: var(--cream); font-family: 'DM Mono', monospace; font-size: 12px; padding: 5px 10px; border-radius: 6px; white-space: nowrap; opacity: 0; transition: opacity .12s; z-index: 9000; max-width: 240px; }
+.tooltip { position: fixed; pointer-events: none; background: #3a2e1e; color: var(--cream); font-family: 'DM Mono', monospace; font-size: 12px; padding: 5px 10px; border-radius: 6px; opacity: 0; transition: opacity .12s; z-index: 9000; max-width: 320px; white-space: normal; line-height: 1.5; }
 
 /* ── MODALS ── */
 .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.22); display: flex; align-items: center; justify-content: center; z-index: 500; opacity: 0; pointer-events: none; transition: opacity .18s; }
 .modal-backdrop.open { opacity: 1; pointer-events: all; }
-.modal { background: var(--cream); border-radius: 10px; padding: 1.5rem 1.7rem; width: 290px; border: 0.5px solid var(--border); box-shadow: 0 12px 32px rgba(0,0,0,0.14); }
+.modal { background: var(--cream); border-radius: 10px; padding: 1.5rem 1.7rem; width: 310px; border: 0.5px solid var(--border); box-shadow: 0 12px 32px rgba(0,0,0,0.14); max-height: 90vh; overflow-y: auto; }
 .modal h3 { font-size: 14px; font-weight: 500; color: var(--brown); margin-bottom: 1.1rem; font-family: 'Lora', serif; }
 .field { display: flex; flex-direction: column; gap: 4px; margin-bottom: 0.9rem; }
 .field label { font-size: 10px; color: var(--brown-muted); letter-spacing: 0.12em; text-transform: uppercase; }
@@ -200,6 +247,11 @@ html, body { font-family: 'DM Mono', monospace; background: var(--cream); color:
 .field input[type=text], .field input[type=date] { width: 100%; padding: 6px 9px; border: 0.5px solid var(--border); border-radius: 6px; background: rgba(255,255,255,0.5); color: var(--brown); font-family: inherit; font-size: 12px; outline: none; transition: border-color .15s; }
 .field input[type=text]:focus, .field input[type=date]:focus { border-color: var(--brown-light); }
 .field input[type=color] { width: 100%; height: 34px; border-radius: 6px; border: 0.5px solid var(--border); cursor: pointer; padding: 2px; background: transparent; }
+.field select { width: 100%; padding: 6px 9px; border: 0.5px solid var(--border); border-radius: 6px; background: rgba(255,255,255,0.5); color: var(--brown); font-family: inherit; font-size: 12px; cursor: pointer; outline: none; }
+.yarn-row { display: flex; gap: 8px; align-items: center; }
+.yarn-row input[type=text] { flex: 1; }
+.yarn-color-preview { width: 28px; height: 28px; border-radius: 50%; border: 0.5px solid var(--border); flex-shrink: 0; cursor: pointer; transition: transform .12s; }
+.yarn-color-preview:hover { transform: scale(1.1); }
 .row-readout { font-family: 'Lora', serif; font-size: 1.6rem; font-weight: 400; color: var(--brown); text-align: center; padding: 4px 0; }
 .modal-btns { display: flex; gap: 8px; justify-content: flex-end; margin-top: 0.4rem; }
 .btn { padding: 5px 14px; border-radius: 6px; border: 0.5px solid rgba(0,0,0,0.18); background: transparent; font-size: 12px; cursor: pointer; color: var(--brown); font-family: inherit; transition: background .12s; }
@@ -208,6 +260,12 @@ html, body { font-family: 'DM Mono', monospace; background: var(--cream); color:
 .btn.primary:hover { background: #a07d58; }
 .btn.danger { color: #A32D2D; border-color: rgba(163,45,45,0.3); }
 .btn.danger:hover { background: rgba(163,45,45,0.07); }
+.field-section-divider {
+  font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--brown-muted); padding: 4px 0 2px;
+  border-top: 0.5px solid var(--border-faint);
+  margin-top: 0.4rem; margin-bottom: 0.2rem;
+}
 </style>
 </head>
 <body>
@@ -229,7 +287,7 @@ html, body { font-family: 'DM Mono', monospace; background: var(--cream); color:
     <div class="header-center">
       <h1 class="header-title">From Start To Knit</h1>
       <div class="header-meta">Knitting progress tracker</div>
-      <p class="header-desc placeholder" id="header-desc">Following my college graduation, I was looking to take up a new hobby. Something both practical and creative. I began my knitting journey starting with dish cloths and scarves and slowing progressing to sweaters and lace. I created From Start to Knit to keep track of my knitting progress and document my projects. I hope to encourage others to record their hobbies and share what they've learned.</p>
+      <p class="header-desc" id="header-desc" contenteditable="false">Following my college graduation, I was looking to take up a new hobby. Something both practical and creative. I began my knitting journey starting with dish cloths and scarves and slowing progressing to sweaters and lace. I created From Start to Knit to keep track of my knitting progress and document my projects. I hope to encourage others to record their hobbies and share what they've learned.</p>
     </div>
     <div class="header-needles">
       <svg class="needle-svg" width="90" height="48" viewBox="0 0 90 48">
@@ -248,6 +306,7 @@ html, body { font-family: 'DM Mono', monospace; background: var(--cream); color:
   <div class="view-toggle">
     <button class="view-btn active" id="btn-projects" onclick="switchView('projects')">By project</button>
     <button class="view-btn" id="btn-status" onclick="switchView('status')">By status</button>
+    <button class="view-btn" id="btn-timeline" onclick="switchView('timeline')">Timeline</button>
   </div>
 
   <div class="content">
@@ -301,7 +360,7 @@ html, body { font-family: 'DM Mono', monospace; background: var(--cream); color:
       </div>
 
       <!-- ── STATUS VIEW ── -->
-      <div id="view-status">
+      <div id="view-status" style="display:none;flex-direction:column;gap:0">
         <div class="scarf-section">
           <svg id="status-scarf-svg" height="160" viewBox="0 0 900 160" preserveAspectRatio="none" cursor="crosshair"></svg>
         </div>
@@ -332,6 +391,22 @@ html, body { font-family: 'DM Mono', monospace; background: var(--cream); color:
         </div>
       </div>
 
+      <!-- ── TIMELINE VIEW ── -->
+      <div id="view-timeline" style="display:none;flex-direction:column;gap:0">
+        <div class="scarf-section">
+          <svg id="timeline-scarf-svg" height="260" viewBox="0 0 900 260" preserveAspectRatio="none" cursor="crosshair"></svg>
+        </div>
+
+        <div class="timeline-caption-row" id="timeline-caption"></div>
+        <div class="tl-proj-section-label">Projects</div>
+        <div class="timeline-proj-list" id="timeline-proj-list"></div>
+
+        <div class="skills-section">
+          <div class="skills-section-label">Skills unlocked</div>
+          <div class="skills-grid" id="skills-grid"></div>
+        </div>
+      </div>
+
     </div>
 
     <aside class="sidebar">
@@ -359,13 +434,29 @@ html, body { font-family: 'DM Mono', monospace; background: var(--cream); color:
     </div>
     <div class="field">
       <label>Status</label>
-      <select id="modal-status" style="width:100%;padding:6px 9px;border:0.5px solid var(--border);border-radius:6px;background:rgba(255,255,255,0.5);color:var(--brown);font-family:inherit;font-size:12px;cursor:pointer;outline:none">
+      <select id="modal-status">
         <option value="active">Active</option>
         <option value="paused">Paused</option>
         <option value="done">Done</option>
       </select>
     </div>
     <div class="field"><label>Goal date (optional)</label><input type="date" id="modal-date"></div>
+    <div class="field-section-divider">Yarn</div>
+    <div class="field">
+      <label>Yarn type / weight</label>
+      <input type="text" id="modal-yarn-type" placeholder="e.g. Merino wool, DK weight">
+    </div>
+    <div class="field">
+      <label>Yarn color name</label>
+      <div class="yarn-row">
+        <input type="text" id="modal-yarn-color-name" placeholder="e.g. Dusty Rose">
+        <div class="yarn-color-preview" id="modal-yarn-color-preview" title="Click to change swatch color"></div>
+        <input type="color" id="modal-yarn-color-picker" style="width:0;height:0;opacity:0;position:absolute">
+      </div>
+    </div>
+    <div class="field-section-divider">Timeline</div>
+    <div class="field"><label>Start date</label><input type="date" id="modal-start-date"></div>
+    <div class="field"><label>End / finish date</label><input type="date" id="modal-end-date"></div>
     <div class="modal-btns">
       <button class="btn danger" id="modal-delete">Delete</button>
       <button class="btn" id="modal-cancel">Cancel</button>
@@ -379,13 +470,28 @@ html, body { font-family: 'DM Mono', monospace; background: var(--cream); color:
   <div class="modal">
     <h3>Add project</h3>
     <div class="field"><label>Name</label><input type="text" id="add-name" placeholder="e.g. Cable-knit blanket"></div>
-    <div class="field"><label>Color</label><input type="color" id="add-color" value="#e07b39"></div>
+    <div class="field"><label>Project color</label><input type="color" id="add-color" value="#e07b39"></div>
     <div class="field">
       <label>Goal rows</label>
       <div class="row-readout" id="add-total-readout">150 rows</div>
       <input type="range" id="add-total-slider" min="10" max="600" value="150" step="5">
     </div>
     <div class="field"><label>Goal date (optional)</label><input type="date" id="add-date"></div>
+    <div class="field-section-divider">Yarn</div>
+    <div class="field">
+      <label>Yarn type / weight</label>
+      <input type="text" id="add-yarn-type" placeholder="e.g. Merino wool, DK weight">
+    </div>
+    <div class="field">
+      <label>Yarn color name</label>
+      <div class="yarn-row">
+        <input type="text" id="add-yarn-color-name" placeholder="e.g. Dusty Rose">
+        <div class="yarn-color-preview" id="add-yarn-color-preview" title="Click to change swatch color" style="background:#cccccc"></div>
+        <input type="color" id="add-yarn-color-picker" value="#cccccc" style="width:0;height:0;opacity:0;position:absolute">
+      </div>
+    </div>
+    <div class="field-section-divider">Timeline</div>
+    <div class="field"><label>Start date</label><input type="date" id="add-start-date"></div>
     <div class="modal-btns">
       <button class="btn" id="add-cancel">Cancel</button>
       <button class="btn primary" id="add-save">Add</button>
@@ -397,225 +503,361 @@ html, body { font-family: 'DM Mono', monospace; background: var(--cream); color:
 <div id="color-popover" style="display:none;position:fixed;z-index:600;background:var(--cream);border:0.5px solid var(--border);border-radius:8px;padding:10px;box-shadow:0 8px 24px rgba(0,0,0,0.14)">
   <div style="display:flex;flex-wrap:wrap;gap:6px;width:132px"></div>
 </div>
+
 <script>
-const PALETTE = ['#FA003F','#378ADD','#FF69B4','#222222','#7F77DD','#E07B39','#D4537E','#639922','#FFA500','#c0a882','#e07b39','#2e86ab'];
-const STATUS_COLOR = { active: '#FF69B4', paused: '#FFA500', done: '#639922' };
+const PALETTE = ['#FA003F','#378ADD','#639922','#222222','#7F77DD','#E07B39','#D4537E','#99225f','#FFA500','#c0a882','#e07b39','#2e86ab'];
+const STATUS_COLOR = { active: '#639922', paused: '#FFA500', done: '#99223a' };
+
+// ── Timeline bounds ──
+const TL_START = new Date('2023-01-01T00:00:00');
+const TL_NOW   = new Date();
 
 let projects = [
-  { name:"Fingerless gloves", pct:100, status:"done",   color:"#FA003F", rows:180, total:180, deadline:null },
-  { name:"Balaclava",         pct:100, status:"done",   color:"#378ADD", rows:200, total:200, deadline:null },
-  { name:"Raglan sweater",    pct:68,  status:"active", color:"#1D9E75", rows:204, total:300, deadline:null },
-  { name:"Sweater vest",      pct:100, status:"done",   color:"#222222", rows:80,  total:80,  deadline:null },
-  { name:"Mittens",           pct:42,  status:"paused", color:"#7F77DD", rows:88,  total:210, deadline:null },
-  { name:"Color work hat",    pct:22,  status:"active", color:"#378ADD", rows:44,  total:200, deadline:null },
-  { name:"Lace shawl",        pct:0,   status:"active", color:"#cccccc", rows:0,   total:200, deadline:null },
+  {
+    name: "Fingerless gloves", pct: 100, status: "done", color: "#FA003F",
+    rows: 180, total: 180, deadline: null,
+    yarnType: "100% alpaca wool", yarnColorName: "Red Rumba", yarnColor: "#FA003F",
+    startDate: "2023-01-10", endDate: "2023-02-14",
+    skills: ["magic loop", "left/right leaning decreases"]
+  },
+  {
+    name: "Balaclava", pct: 100, status: "done", color: "#378ADD",
+    rows: 200, total: 200, deadline: null,
+    yarnType: "100% merino", yarnColorName: "Indigo", yarnColor: "#378ADD",
+    startDate: "2023-02-20", endDate: "2023-04-05",
+    skills: ["picking up stitches"]
+  },
+  {
+    name: "Sweater vest", pct: 100, status: "done", color: "#222222",
+    rows: 80, total: 80, deadline: null,
+    yarnType: "100% wool", yarnColorName: "Black", yarnColor: "#222222",
+    startDate: "2023-04-15", endDate: "2023-06-01",
+    skills: ["ribbing", "stretchy cast on/bind off"]
+  },
+  {
+    name: "Mittens", pct: 42, status: "paused", color: "#7F77DD",
+    rows: 88, total: 210, deadline: null,
+    yarnType: "100% wool", yarnColorName: "Purple", yarnColor: "#7F77DD",
+    startDate: "2023-07-01", endDate: null,
+    skills: []
+  },
+  {
+    name: "Raglan sweater", pct: 68, status: "active", color: "#1D9E75",
+    rows: 204, total: 300, deadline: null,
+    yarnType: "Blown Alpaca/Merino", yarnColorName: "North Sea", yarnColor: "#1D9E75",
+    startDate: "2023-10-01", endDate: null,
+    skills: ["raglan increases"]
+  },
+  {
+    name: "Color work hat", pct: 22, status: "active", color: "#378ADD",
+    rows: 44, total: 200, deadline: null,
+    yarnType: "100% wool", yarnColorName: "Peacock", yarnColor: "#cccccc",
+    startDate: "2024-03-10", endDate: null,
+    skills: ["double knitting", "two-color cast on"]
+  },
+  {
+    name: "Lace shawl", pct: 0, status: "active", color: "#5c3472",
+    rows: 0, total: 200, deadline: null,
+    yarnType: "Silk mohair", yarnColorName: "Pink", yarnColor: "#5c3472",
+    startDate: "2024-09-01", endDate: null,
+    skills: ["lace knitting", "yarn overs"]
+  },
 ];
+
 let log = [];
 let currentView = 'projects';
+
+// ── CHRONOLOGICAL SORT ──
+// Returns a copy of projects sorted oldest startDate first.
+// Projects without a startDate go to the end, preserving their relative order.
+function chronoSorted() {
+  return [...projects].sort((a, b) => {
+    if (!a.startDate && !b.startDate) return 0;
+    if (!a.startDate) return 1;
+    if (!b.startDate) return -1;
+    return new Date(a.startDate) - new Date(b.startDate);
+  });
+}
 
 // ── VIEW SWITCHING ──
 function switchView(v) {
   currentView = v;
-  document.getElementById('view-projects').style.display = v === 'projects' ? '' : 'none';
-  document.getElementById('view-status').style.display   = v === 'status'   ? 'flex' : 'none';
+  document.getElementById('view-projects').style.display  = v === 'projects'  ? '' : 'none';
+  document.getElementById('view-status').style.display    = v === 'status'    ? 'flex' : 'none';
+  document.getElementById('view-timeline').style.display  = v === 'timeline'  ? 'flex' : 'none';
   document.getElementById('btn-projects').classList.toggle('active', v === 'projects');
   document.getElementById('btn-status').classList.toggle('active',   v === 'status');
-  if (v === 'status') renderStatusView();
+  document.getElementById('btn-timeline').classList.toggle('active', v === 'timeline');
+  if (v === 'status')   renderStatusView();
+  if (v === 'timeline') renderTimelineView();
 }
 
 // ── SVG HELPERS ──
 const SVG_NS = 'http://www.w3.org/2000/svg';
-const W=900, H=160, WAVE_AMP=22, WAVE_FREQ=2, SCARF_H=70, CY=H/2, FRINGE_W=30, BODY_W=W-FRINGE_W*2, BODY_X=FRINGE_W, PHASE=0.6;
+const W = 900, H = 160, WAVE_AMP = 22, WAVE_FREQ = 2, SCARF_H = 70, CY = H / 2,
+      FRINGE_W = 30, BODY_W = W - FRINGE_W * 2, BODY_X = FRINGE_W, PHASE = 0.6;
+const TLH = 260, TL_CY = 155, TL_AMP = 18, TL_SH = 60;
 
-function ns(t){ return document.createElementNS(SVG_NS,t); }
-function waveY(x,ph){ return CY + WAVE_AMP * Math.sin((x/BODY_W)*Math.PI*2*WAVE_FREQ + ph); }
-function buildWavePath(){
-  const steps=120, dx=BODY_W/steps;
-  let d=`M ${BODY_X} ${waveY(0,PHASE)-SCARF_H/2}`;
-  for(let i=1;i<=steps;i++){const x=BODY_X+i*dx; d+=` L ${x} ${waveY(i*dx,PHASE)-SCARF_H/2}`;}
-  for(let i=steps;i>=0;i--){const x=BODY_X+i*dx; d+=` L ${x} ${waveY(i*dx,PHASE)+SCARF_H/2}`;}
-  return d+' Z';
+function ns(t) { return document.createElementNS(SVG_NS, t); }
+
+function waveY(x, cy, amp) {
+  cy  = cy  !== undefined ? cy  : CY;
+  amp = amp !== undefined ? amp : WAVE_AMP;
+  return cy + amp * Math.sin((x / BODY_W) * Math.PI * 2 * WAVE_FREQ + PHASE);
 }
-function buildWaveEdge(edge){
-  const steps=120, dx=BODY_W/steps, sign=edge==='top'?-1:1;
-  let d=`M ${BODY_X} ${waveY(0,PHASE)+sign*SCARF_H/2}`;
-  for(let i=1;i<=steps;i++){const x=BODY_X+i*dx; d+=` L ${x} ${waveY(i*dx,PHASE)+sign*SCARF_H/2}`;}
+
+function buildWavePath(cy, amp, sh) {
+  cy = cy !== undefined ? cy : CY;
+  amp = amp !== undefined ? amp : WAVE_AMP;
+  sh  = sh  !== undefined ? sh  : SCARF_H;
+  const steps = 120, dx = BODY_W / steps;
+  let d = `M ${BODY_X} ${waveY(0, cy, amp) - sh / 2}`;
+  for (let i = 1; i <= steps; i++) { const x = BODY_X + i * dx; d += ` L ${x} ${waveY(i * dx, cy, amp) - sh / 2}`; }
+  for (let i = steps; i >= 0; i--) { const x = BODY_X + i * dx; d += ` L ${x} ${waveY(i * dx, cy, amp) + sh / 2}`; }
+  return d + ' Z';
+}
+
+function buildWaveEdge(edge, cy, amp, sh) {
+  cy  = cy  !== undefined ? cy  : CY;
+  amp = amp !== undefined ? amp : WAVE_AMP;
+  sh  = sh  !== undefined ? sh  : SCARF_H;
+  const steps = 120, dx = BODY_W / steps, sign = edge === 'top' ? -1 : 1;
+  let d = `M ${BODY_X} ${waveY(0, cy, amp) + sign * sh / 2}`;
+  for (let i = 1; i <= steps; i++) { const x = BODY_X + i * dx; d += ` L ${x} ${waveY(i * dx, cy, amp) + sign * sh / 2}`; }
   return d;
 }
 
 // ── RENDER PROJECT SCARF ──
+// Uses chronological order: earliest startDate on the left, latest on the right.
 let _segments = [];
 
-function renderScarf(){
-  const totalRows = projects.reduce((s,p)=>s+p.total,0);
+function renderScarf() {
+  const ordered = chronoSorted();           // ← chronological
+  const totalRows = projects.reduce((s, p) => s + p.total, 0);
   const svg = document.getElementById('scarf-svg');
   const defs = svg.querySelector('defs');
-  while(defs.children.length>1) defs.removeChild(defs.lastChild);
-  ['bands-group','stitch-overlay','fringe-left-svg','fringe-right-svg'].forEach(id=>{
-    const g=document.getElementById(id); while(g.firstChild) g.removeChild(g.firstChild);
+  while (defs.children.length > 1) defs.removeChild(defs.lastChild);
+  ['bands-group', 'stitch-overlay', 'fringe-left-svg', 'fringe-right-svg'].forEach(id => {
+    const g = document.getElementById(id); while (g.firstChild) g.removeChild(g.firstChild);
   });
+
   const waveD = buildWavePath();
-  const globalClip = ns('clipPath'); globalClip.setAttribute('id','global-wave-clip');
-  const gcP = ns('path'); gcP.setAttribute('d',waveD); globalClip.appendChild(gcP); defs.appendChild(globalClip);
+  const globalClip = ns('clipPath'); globalClip.setAttribute('id', 'global-wave-clip');
+  const gcP = ns('path'); gcP.setAttribute('d', waveD); globalClip.appendChild(gcP); defs.appendChild(globalClip);
+
   const segments = [];
   let curX = BODY_X;
-  projects.forEach(p=>{
-    const doneW = Math.max(3, Math.round((p.rows/totalRows)*BODY_W));
-    const remW  = Math.max(2, Math.round(((p.total-p.rows)/totalRows)*BODY_W));
-    if(doneW>0) segments.push({x:curX, w:doneW, color:p.color, rem:false, project:p});
+  ordered.forEach(p => {                    // ← use ordered
+    const doneW = Math.max(3, Math.round((p.rows / totalRows) * BODY_W));
+    const remW  = Math.max(2, Math.round(((p.total - p.rows) / totalRows) * BODY_W));
+    if (doneW > 0) segments.push({ x: curX, w: doneW, color: p.color, rem: false, project: p });
     curX += doneW;
-    if(p.pct<100 && remW>0) segments.push({x:curX, w:remW, color:p.color, rem:true, project:p});
+    if (p.pct < 100 && remW > 0) segments.push({ x: curX, w: remW, color: p.color, rem: true, project: p });
     curX += remW;
   });
   _segments = segments;
+
   const bandsGroup = document.getElementById('bands-group');
   const stitchOverlay = document.getElementById('stitch-overlay');
-  stitchOverlay.setAttribute('clip-path','url(#global-wave-clip)');
-  segments.forEach((seg,i)=>{
-    const clipId=`sc${i}`;
-    const cp=ns('clipPath'); cp.setAttribute('id',clipId);
-    const cr=ns('rect'); cr.setAttribute('x',seg.x); cr.setAttribute('y',0); cr.setAttribute('width',seg.w); cr.setAttribute('height',H);
+  stitchOverlay.setAttribute('clip-path', 'url(#global-wave-clip)');
+
+  segments.forEach((seg, i) => {
+    const clipId = `sc${i}`;
+    const cp = ns('clipPath'); cp.setAttribute('id', clipId);
+    const cr = ns('rect'); cr.setAttribute('x', seg.x); cr.setAttribute('y', 0);
+    cr.setAttribute('width', seg.w); cr.setAttribute('height', H);
     cp.appendChild(cr); defs.appendChild(cp);
-    const bp=ns('path'); bp.setAttribute('d',waveD); bp.setAttribute('fill',seg.color);
-    bp.setAttribute('clip-path',`url(#${clipId})`);
-    if(seg.rem){
-      bp.setAttribute('fill-opacity','0.5');
-      const hId=`hp${i}`, pat=ns('pattern');
-      pat.setAttribute('id',hId); pat.setAttribute('x','0'); pat.setAttribute('y','0');
-      pat.setAttribute('width','7'); pat.setAttribute('height','7');
-      pat.setAttribute('patternUnits','userSpaceOnUse'); pat.setAttribute('patternTransform','rotate(45)');
-      const ln=ns('line'); ln.setAttribute('x1','0'); ln.setAttribute('y1','0'); ln.setAttribute('x2','0'); ln.setAttribute('y2','7');
-      ln.setAttribute('stroke','rgba(255,255,255,0.22)'); ln.setAttribute('stroke-width','2');
+    const bp = ns('path'); bp.setAttribute('d', waveD); bp.setAttribute('fill', seg.color);
+    bp.setAttribute('clip-path', `url(#${clipId})`);
+    if (seg.rem) {
+      bp.setAttribute('fill-opacity', '0.5');
+      const hId = `hp${i}`, pat = ns('pattern');
+      pat.setAttribute('id', hId); pat.setAttribute('x', '0'); pat.setAttribute('y', '0');
+      pat.setAttribute('width', '7'); pat.setAttribute('height', '7');
+      pat.setAttribute('patternUnits', 'userSpaceOnUse'); pat.setAttribute('patternTransform', 'rotate(45)');
+      const ln = ns('line'); ln.setAttribute('x1', '0'); ln.setAttribute('y1', '0');
+      ln.setAttribute('x2', '0'); ln.setAttribute('y2', '7');
+      ln.setAttribute('stroke', 'rgba(255,255,255,0.22)'); ln.setAttribute('stroke-width', '2');
       pat.appendChild(ln); defs.appendChild(pat);
-      const hp=ns('path'); hp.setAttribute('d',waveD); hp.setAttribute('fill',`url(#${hId})`);
-      hp.setAttribute('clip-path',`url(#${clipId})`);
+      const hp = ns('path'); hp.setAttribute('d', waveD); hp.setAttribute('fill', `url(#${hId})`);
+      hp.setAttribute('clip-path', `url(#${clipId})`);
       bandsGroup.appendChild(bp); bandsGroup.appendChild(hp);
     } else {
       bandsGroup.appendChild(bp);
-      const sr=ns('rect'); sr.setAttribute('x',seg.x); sr.setAttribute('y',0); sr.setAttribute('width',seg.w); sr.setAttribute('height',H);
-      sr.setAttribute('fill','url(#stitch-pat)'); sr.setAttribute('clip-path',`url(#${clipId})`);
+      const sr = ns('rect'); sr.setAttribute('x', seg.x); sr.setAttribute('y', 0);
+      sr.setAttribute('width', seg.w); sr.setAttribute('height', H);
+      sr.setAttribute('fill', 'url(#stitch-pat)'); sr.setAttribute('clip-path', `url(#${clipId})`);
       stitchOverlay.appendChild(sr);
     }
   });
+
   document.getElementById('wave-top-line').setAttribute('d', buildWaveEdge('top'));
   document.getElementById('wave-bot-line').setAttribute('d', buildWaveEdge('bot'));
-  const leftEdgeY = waveY(0,PHASE);
-  const fringeSpacing = SCARF_H/19;
+
+  const fringeSpacing = SCARF_H / 19;
+  const leftEdgeY = waveY(0);
   const fringeLeftG = document.getElementById('fringe-left-svg');
-  for(let i=0;i<20;i++){
-    const l=ns('line'); const fy=leftEdgeY-SCARF_H/2+i*fringeSpacing;
-    l.setAttribute('x1',BODY_X); l.setAttribute('y1',fy); l.setAttribute('x2',BODY_X-FRINGE_W); l.setAttribute('y2',fy);
-    l.setAttribute('stroke',projects[0].color); l.setAttribute('stroke-width','2.5'); l.setAttribute('stroke-linecap','round'); l.setAttribute('opacity','0.8');
+  for (let i = 0; i < 20; i++) {
+    const l = ns('line'); const fy = leftEdgeY - SCARF_H / 2 + i * fringeSpacing;
+    l.setAttribute('x1', BODY_X); l.setAttribute('y1', fy);
+    l.setAttribute('x2', BODY_X - FRINGE_W); l.setAttribute('y2', fy);
+    l.setAttribute('stroke', ordered[0].color); l.setAttribute('stroke-width', '2.5');
+    l.setAttribute('stroke-linecap', 'round'); l.setAttribute('opacity', '0.8');
     fringeLeftG.appendChild(l);
   }
-  const rightEdgeY = waveY(BODY_W,PHASE);
-  const endX = BODY_X+BODY_W;
-  const fringeRColor = projects[projects.length-1]?.color || '#ccc';
+  const rightEdgeY = waveY(BODY_W);
+  const endX = BODY_X + BODY_W;
+  const fringeRColor = ordered[ordered.length - 1]?.color || '#ccc';
   const fringeRightG = document.getElementById('fringe-right-svg');
-  for(let i=0;i<20;i++){
-    const l=ns('line'); const fy=rightEdgeY-SCARF_H/2+i*fringeSpacing;
-    l.setAttribute('x1',endX); l.setAttribute('y1',fy); l.setAttribute('x2',endX+FRINGE_W); l.setAttribute('y2',fy);
-    l.setAttribute('stroke',fringeRColor); l.setAttribute('stroke-width','2.5'); l.setAttribute('stroke-linecap','round'); l.setAttribute('opacity','0.8');
+  for (let i = 0; i < 20; i++) {
+    const l = ns('line'); const fy = rightEdgeY - SCARF_H / 2 + i * fringeSpacing;
+    l.setAttribute('x1', endX); l.setAttribute('y1', fy);
+    l.setAttribute('x2', endX + FRINGE_W); l.setAttribute('y2', fy);
+    l.setAttribute('stroke', fringeRColor); l.setAttribute('stroke-width', '2.5');
+    l.setAttribute('stroke-linecap', 'round'); l.setAttribute('opacity', '0.8');
     fringeRightG.appendChild(l);
   }
 }
 
 // ── RENDER STATUS SCARF ──
+// Groups by status (active / paused / done), but within each group
+// projects are ordered chronologically by startDate.
+let _statusSegments = [];
+
 function renderStatusScarf() {
   const svg = document.getElementById('status-scarf-svg');
   svg.innerHTML = '';
-  const totalRows = projects.reduce((s,p)=>s+p.total,0);
+  const totalRows = projects.reduce((s, p) => s + p.total, 0);
   if (!totalRows) return;
   const defs = ns('defs');
-  const sp = ns('pattern'); sp.setAttribute('id','sstitch'); sp.setAttribute('x','0'); sp.setAttribute('y','0'); sp.setAttribute('width','6'); sp.setAttribute('height','6'); sp.setAttribute('patternUnits','userSpaceOnUse');
-  const sl = ns('line'); sl.setAttribute('x1','3'); sl.setAttribute('y1','0'); sl.setAttribute('x2','3'); sl.setAttribute('y2','6'); sl.setAttribute('stroke','rgba(255,255,255,0.14)'); sl.setAttribute('stroke-width','1'); sp.appendChild(sl); defs.appendChild(sp);
-  ['active','paused','done'].forEach(st=>{
-    const hid='shatch-'+st;
-    const hp=ns('pattern'); hp.setAttribute('id',hid); hp.setAttribute('x','0'); hp.setAttribute('y','0'); hp.setAttribute('width','7'); hp.setAttribute('height','7'); hp.setAttribute('patternUnits','userSpaceOnUse'); hp.setAttribute('patternTransform','rotate(45)');
-    const hl=ns('line'); hl.setAttribute('x1','0'); hl.setAttribute('y1','0'); hl.setAttribute('x2','0'); hl.setAttribute('y2','7'); hl.setAttribute('stroke','rgba(255,255,255,0.25)'); hl.setAttribute('stroke-width','2'); hp.appendChild(hl); defs.appendChild(hp);
+
+  const sp = ns('pattern'); sp.setAttribute('id', 'sstitch'); sp.setAttribute('x', '0'); sp.setAttribute('y', '0');
+  sp.setAttribute('width', '6'); sp.setAttribute('height', '6'); sp.setAttribute('patternUnits', 'userSpaceOnUse');
+  const sl = ns('line'); sl.setAttribute('x1', '3'); sl.setAttribute('y1', '0'); sl.setAttribute('x2', '3'); sl.setAttribute('y2', '6');
+  sl.setAttribute('stroke', 'rgba(255,255,255,0.14)'); sl.setAttribute('stroke-width', '1'); sp.appendChild(sl); defs.appendChild(sp);
+
+  ['active', 'paused', 'done'].forEach(st => {
+    const hid = 'shatch-' + st;
+    const hp = ns('pattern'); hp.setAttribute('id', hid); hp.setAttribute('x', '0'); hp.setAttribute('y', '0');
+    hp.setAttribute('width', '7'); hp.setAttribute('height', '7'); hp.setAttribute('patternUnits', 'userSpaceOnUse');
+    hp.setAttribute('patternTransform', 'rotate(45)');
+    const hl = ns('line'); hl.setAttribute('x1', '0'); hl.setAttribute('y1', '0'); hl.setAttribute('x2', '0'); hl.setAttribute('y2', '7');
+    hl.setAttribute('stroke', 'rgba(255,255,255,0.25)'); hl.setAttribute('stroke-width', '2'); hp.appendChild(hl); defs.appendChild(hp);
   });
+
   const waveD = buildWavePath();
-  const gc=ns('clipPath'); gc.setAttribute('id','sgwc');
-  const gcp=ns('path'); gcp.setAttribute('d',waveD); gc.appendChild(gcp); defs.appendChild(gc);
+  const gc = ns('clipPath'); gc.setAttribute('id', 'sgwc');
+  const gcp = ns('path'); gcp.setAttribute('d', waveD); gc.appendChild(gcp); defs.appendChild(gc);
   svg.appendChild(defs);
-  const bandsG=ns('g'); const stitchG=ns('g'); stitchG.setAttribute('clip-path','url(#sgwc)'); const divG=ns('g');
-  const ORDER=['active','paused','done'];
-  let curX=BODY_X, segIdx=0;
-  ORDER.forEach((st,oi)=>{
-    const col=STATUS_COLOR[st];
-    projects.filter(p=>p.status===st).forEach(p=>{
-      const doneW=Math.max(3,Math.round((p.rows/totalRows)*BODY_W));
-      const remW=Math.max(2,Math.round(((p.total-p.rows)/totalRows)*BODY_W));
-      if(doneW>0){
-        const id='ssc'+segIdx++;
-        const cp=ns('clipPath'); cp.setAttribute('id',id);
-        const cr=ns('rect'); cr.setAttribute('x',curX); cr.setAttribute('y',0); cr.setAttribute('width',doneW); cr.setAttribute('height',H);
+
+  const bandsG = ns('g'), stitchG = ns('g'), divG = ns('g');
+  stitchG.setAttribute('clip-path', 'url(#sgwc)');
+
+  const ORDER = ['active', 'paused', 'done'];
+  let curX = BODY_X, segIdx = 0;
+  _statusSegments = [];
+
+  ORDER.forEach((st, oi) => {
+    const col = STATUS_COLOR[st];
+    // ← sort each status group chronologically
+    const group = projects.filter(p => p.status === st).sort((a, b) => {
+      if (!a.startDate && !b.startDate) return 0;
+      if (!a.startDate) return 1;
+      if (!b.startDate) return -1;
+      return new Date(a.startDate) - new Date(b.startDate);
+    });
+
+    group.forEach(p => {
+      const doneW = Math.max(3, Math.round((p.rows / totalRows) * BODY_W));
+      const remW  = Math.max(2, Math.round(((p.total - p.rows) / totalRows) * BODY_W));
+      if (doneW > 0) {
+        const id = 'ssc' + segIdx++;
+        const cp = ns('clipPath'); cp.setAttribute('id', id);
+        const cr = ns('rect'); cr.setAttribute('x', curX); cr.setAttribute('y', 0); cr.setAttribute('width', doneW); cr.setAttribute('height', H);
         cp.appendChild(cr); defs.appendChild(cp);
-        const bp=ns('path'); bp.setAttribute('d',waveD); bp.setAttribute('fill',col); bp.setAttribute('clip-path','url(#'+id+')');
+        const bp = ns('path'); bp.setAttribute('d', waveD); bp.setAttribute('fill', col); bp.setAttribute('clip-path', 'url(#' + id + ')');
         bandsG.appendChild(bp);
-        const sr=ns('rect'); sr.setAttribute('x',curX); sr.setAttribute('y',0); sr.setAttribute('width',doneW); sr.setAttribute('height',H); sr.setAttribute('fill','url(#sstitch)'); sr.setAttribute('clip-path','url(#'+id+')');
-        stitchG.appendChild(sr); curX+=doneW;
+        const sr = ns('rect'); sr.setAttribute('x', curX); sr.setAttribute('y', 0); sr.setAttribute('width', doneW); sr.setAttribute('height', H);
+        sr.setAttribute('fill', 'url(#sstitch)'); sr.setAttribute('clip-path', 'url(#' + id + ')');
+        stitchG.appendChild(sr);
+        _statusSegments.push({ x: curX, w: doneW, rem: false, project: p });
+        curX += doneW;
       }
-      if(p.total>p.rows && remW>0){
-        const id='ssc'+segIdx++;
-        const cp=ns('clipPath'); cp.setAttribute('id',id);
-        const cr=ns('rect'); cr.setAttribute('x',curX); cr.setAttribute('y',0); cr.setAttribute('width',remW); cr.setAttribute('height',H);
+      if (p.total > p.rows && remW > 0) {
+        const id = 'ssc' + segIdx++;
+        const cp = ns('clipPath'); cp.setAttribute('id', id);
+        const cr = ns('rect'); cr.setAttribute('x', curX); cr.setAttribute('y', 0); cr.setAttribute('width', remW); cr.setAttribute('height', H);
         cp.appendChild(cr); defs.appendChild(cp);
-        const bp=ns('path'); bp.setAttribute('d',waveD); bp.setAttribute('fill',col); bp.setAttribute('fill-opacity','0.45'); bp.setAttribute('clip-path','url(#'+id+')');
+        const bp = ns('path'); bp.setAttribute('d', waveD); bp.setAttribute('fill', col); bp.setAttribute('fill-opacity', '0.45'); bp.setAttribute('clip-path', 'url(#' + id + ')');
         bandsG.appendChild(bp);
-        const hp=ns('path'); hp.setAttribute('d',waveD); hp.setAttribute('fill','url(#shatch-'+st+')'); hp.setAttribute('clip-path','url(#'+id+')');
-        bandsG.appendChild(hp); curX+=remW;
+        const hp = ns('path'); hp.setAttribute('d', waveD); hp.setAttribute('fill', 'url(#shatch-' + st + ')'); hp.setAttribute('clip-path', 'url(#' + id + ')');
+        bandsG.appendChild(hp);
+        _statusSegments.push({ x: curX, w: remW, rem: true, project: p });
+        curX += remW;
       }
     });
-    if(oi<ORDER.length-1 && curX>BODY_X){
-      const did='sdiv'+oi;
-      const cp=ns('clipPath'); cp.setAttribute('id',did);
-      const cr=ns('rect'); cr.setAttribute('x',curX-1); cr.setAttribute('y',0); cr.setAttribute('width',2); cr.setAttribute('height',H);
+
+    // divider between status groups
+    if (oi < ORDER.length - 1 && curX > BODY_X) {
+      const did = 'sdiv' + oi;
+      const cp = ns('clipPath'); cp.setAttribute('id', did);
+      const cr = ns('rect'); cr.setAttribute('x', curX - 1); cr.setAttribute('y', 0); cr.setAttribute('width', 2); cr.setAttribute('height', H);
       cp.appendChild(cr); defs.appendChild(cp);
-      const dl=ns('path'); dl.setAttribute('d',waveD); dl.setAttribute('fill','rgba(255,255,255,0.6)'); dl.setAttribute('clip-path','url(#'+did+')');
+      const dl = ns('path'); dl.setAttribute('d', waveD); dl.setAttribute('fill', 'rgba(255,255,255,0.6)'); dl.setAttribute('clip-path', 'url(#' + did + ')');
       divG.appendChild(dl);
     }
   });
+
   svg.appendChild(bandsG); svg.appendChild(stitchG); svg.appendChild(divG);
-  const et=ns('path'); et.setAttribute('d',buildWaveEdge('top')); et.setAttribute('fill','none'); et.setAttribute('stroke','rgba(0,0,0,0.07)'); et.setAttribute('stroke-width','1');
-  const eb=ns('path'); eb.setAttribute('d',buildWaveEdge('bot')); eb.setAttribute('fill','none'); eb.setAttribute('stroke','rgba(0,0,0,0.07)'); eb.setAttribute('stroke-width','1');
+  const et = ns('path'); et.setAttribute('d', buildWaveEdge('top')); et.setAttribute('fill', 'none'); et.setAttribute('stroke', 'rgba(0,0,0,0.07)'); et.setAttribute('stroke-width', '1');
+  const eb = ns('path'); eb.setAttribute('d', buildWaveEdge('bot')); eb.setAttribute('fill', 'none'); eb.setAttribute('stroke', 'rgba(0,0,0,0.07)'); eb.setAttribute('stroke-width', '1');
   svg.appendChild(et); svg.appendChild(eb);
-  const fsp=SCARF_H/19;
-  const leftG=ns('g'); const ley=waveY(0,PHASE);
-  for(let i=0;i<20;i++){
-    const l=ns('line'); const fy=ley-SCARF_H/2+i*fsp;
-    l.setAttribute('x1',BODY_X); l.setAttribute('y1',fy); l.setAttribute('x2',BODY_X-FRINGE_W); l.setAttribute('y2',fy);
-    l.setAttribute('stroke',STATUS_COLOR.active); l.setAttribute('stroke-width','2.5'); l.setAttribute('stroke-linecap','round'); l.setAttribute('opacity','0.8');
+
+  const fsp = SCARF_H / 19;
+  const leftG = ns('g'); const ley = waveY(0);
+  for (let i = 0; i < 20; i++) {
+    const l = ns('line'); const fy = ley - SCARF_H / 2 + i * fsp;
+    l.setAttribute('x1', BODY_X); l.setAttribute('y1', fy); l.setAttribute('x2', BODY_X - FRINGE_W); l.setAttribute('y2', fy);
+    l.setAttribute('stroke', STATUS_COLOR.active); l.setAttribute('stroke-width', '2.5'); l.setAttribute('stroke-linecap', 'round'); l.setAttribute('opacity', '0.8');
     leftG.appendChild(l);
   }
   svg.appendChild(leftG);
-  const rightG=ns('g'); const rey=waveY(BODY_W,PHASE); const endX=BODY_X+BODY_W;
-  for(let i=0;i<20;i++){
-    const l=ns('line'); const fy=rey-SCARF_H/2+i*fsp;
-    l.setAttribute('x1',endX); l.setAttribute('y1',fy); l.setAttribute('x2',endX+FRINGE_W); l.setAttribute('y2',fy);
-    l.setAttribute('stroke',STATUS_COLOR.done); l.setAttribute('stroke-width','2.5'); l.setAttribute('stroke-linecap','round'); l.setAttribute('opacity','0.8');
+  const rightG = ns('g'); const rey = waveY(BODY_W); const endX = BODY_X + BODY_W;
+  for (let i = 0; i < 20; i++) {
+    const l = ns('line'); const fy = rey - SCARF_H / 2 + i * fsp;
+    l.setAttribute('x1', endX); l.setAttribute('y1', fy); l.setAttribute('x2', endX + FRINGE_W); l.setAttribute('y2', fy);
+    l.setAttribute('stroke', STATUS_COLOR.done); l.setAttribute('stroke-width', '2.5'); l.setAttribute('stroke-linecap', 'round'); l.setAttribute('opacity', '0.8');
     rightG.appendChild(l);
   }
   svg.appendChild(rightG);
-  const doneRows=projects.reduce((s,p)=>s+p.rows,0);
-  const pct=totalRows>0?Math.round(doneRows/totalRows*100):0;
-  const active=projects.filter(p=>p.status==='active');
-  const paused=projects.filter(p=>p.status==='paused');
-  const done=projects.filter(p=>p.status==='done');
+
+  const doneRows = projects.reduce((s, p) => s + p.rows, 0);
+  const pct = totalRows > 0 ? Math.round(doneRows / totalRows * 100) : 0;
+  const active = projects.filter(p => p.status === 'active');
+  const paused = projects.filter(p => p.status === 'paused');
+  const done   = projects.filter(p => p.status === 'done');
   document.getElementById('status-scarf-caption').textContent =
     `${pct}% overall · ${active.length} active · ${paused.length} paused · ${done.length} complete`;
 }
 
 function renderStatusLists() {
-  ['active','paused','done'].forEach(st=>{
-    const col=STATUS_COLOR[st];
-    const el=document.getElementById('status-list-'+st);
-    el.innerHTML='';
-    projects.filter(p=>p.status===st).forEach(p=>{
-      const pct=p.total>0?Math.round(p.rows/p.total*100):0;
-      const row=document.createElement('div'); row.className='status-proj-row';
-      row.innerHTML=`<div class="status-proj-swatch" style="background:${col}"></div>
-        <span class="status-proj-name">${p.name}</span>
+  ['active', 'paused', 'done'].forEach(st => {
+    const col = STATUS_COLOR[st];
+    const el = document.getElementById('status-list-' + st);
+    el.innerHTML = '';
+    // ← sort each list chronologically
+    const group = projects.filter(p => p.status === st).sort((a, b) => {
+      if (!a.startDate && !b.startDate) return 0;
+      if (!a.startDate) return 1;
+      if (!b.startDate) return -1;
+      return new Date(a.startDate) - new Date(b.startDate);
+    });
+    group.forEach(p => {
+      const pct = p.total > 0 ? Math.round(p.rows / p.total * 100) : 0;
+      const yarnInfo = [p.yarnType, p.yarnColorName].filter(Boolean).join(' · ');
+      const row = document.createElement('div'); row.className = 'status-proj-row';
+      row.innerHTML = `<div class="status-proj-swatch" style="background:${col}"></div>
+        <span class="status-proj-name">${p.name}${yarnInfo ? `<span style="font-size:11px;color:var(--brown-faint);margin-left:5px">${yarnInfo}</span>` : ''}</span>
         <span class="status-proj-meta">${p.rows}/${p.total} · ${pct}%</span>`;
       el.appendChild(row);
     });
@@ -624,214 +866,529 @@ function renderStatusLists() {
 
 function renderStatusView() { renderStatusScarf(); renderStatusLists(); }
 
+// ── TIMELINE HELPERS ──
+function dateToX(dateStr) {
+  const d = dateStr ? new Date(dateStr + 'T00:00:00') : TL_NOW;
+  const total   = TL_NOW - TL_START;
+  const elapsed = Math.max(0, Math.min(d - TL_START, total));
+  return BODY_X + (elapsed / total) * BODY_W;
+}
+
+function fmtMY(d) {
+  return d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+}
+
+// ── RENDER TIMELINE SCARF ──
+let _tlSegments = [];
+
+function renderTimelineScarf() {
+  const svg = document.getElementById('timeline-scarf-svg');
+  svg.innerHTML = '';
+
+  const defs = ns('defs');
+
+  const sp = ns('pattern'); sp.setAttribute('id', 'tlsp'); sp.setAttribute('x', '0'); sp.setAttribute('y', '0');
+  sp.setAttribute('width', '6'); sp.setAttribute('height', '6'); sp.setAttribute('patternUnits', 'userSpaceOnUse');
+  const sl = ns('line'); sl.setAttribute('x1', '3'); sl.setAttribute('y1', '0'); sl.setAttribute('x2', '3'); sl.setAttribute('y2', '6');
+  sl.setAttribute('stroke', 'rgba(255,255,255,0.14)'); sl.setAttribute('stroke-width', '1'); sp.appendChild(sl); defs.appendChild(sp);
+
+  const hp = ns('pattern'); hp.setAttribute('id', 'tlhp'); hp.setAttribute('x', '0'); hp.setAttribute('y', '0');
+  hp.setAttribute('width', '7'); hp.setAttribute('height', '7'); hp.setAttribute('patternUnits', 'userSpaceOnUse'); hp.setAttribute('patternTransform', 'rotate(45)');
+  const hl = ns('line'); hl.setAttribute('x1', '0'); hl.setAttribute('y1', '0'); hl.setAttribute('x2', '0'); hl.setAttribute('y2', '7');
+  hl.setAttribute('stroke', 'rgba(255,255,255,0.22)'); hl.setAttribute('stroke-width', '2'); hp.appendChild(hl); defs.appendChild(hp);
+
+  const waveD = buildWavePath(TL_CY, TL_AMP, TL_SH);
+  const gc = ns('clipPath'); gc.setAttribute('id', 'tlgc');
+  const gcp = ns('path'); gcp.setAttribute('d', waveD); gc.appendChild(gcp); defs.appendChild(gc);
+
+  svg.appendChild(defs);
+
+  const bandsG  = ns('g');
+  const stitchG = ns('g'); stitchG.setAttribute('clip-path', 'url(#tlgc)');
+  const divG    = ns('g');
+  const labelG  = ns('g');
+  const tickG   = ns('g');
+  const markerG = ns('g');
+
+  _tlSegments = [];
+  let segIdx = 0;
+
+  const bgClip = ns('clipPath'); bgClip.setAttribute('id', 'tlbgc');
+  const bgR = ns('rect'); bgR.setAttribute('x', BODY_X); bgR.setAttribute('y', 0);
+  bgR.setAttribute('width', BODY_W); bgR.setAttribute('height', TLH);
+  bgClip.appendChild(bgR); defs.appendChild(bgClip);
+  const bgP = ns('path'); bgP.setAttribute('d', waveD); bgP.setAttribute('fill', 'rgba(122,92,58,0.07)');
+  bgP.setAttribute('clip-path', 'url(#tlbgc)'); bandsG.appendChild(bgP);
+
+  const nowX = dateToX(null);
+  const sorted = [...projects].filter(p => p.startDate).sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
+
+  sorted.forEach((p, pi) => {
+    const x1    = dateToX(p.startDate);
+    const x2End = p.endDate ? dateToX(p.endDate) : nowX;
+    const wDone = Math.max(2, x2End - x1);
+    const wRem  = (p.status !== 'done' && !p.endDate) ? Math.min(24, W - FRINGE_W - x2End) : 0;
+
+    const doneId = 'tld' + segIdx++;
+    const dcp = ns('clipPath'); dcp.setAttribute('id', doneId);
+    const dcr = ns('rect'); dcr.setAttribute('x', x1); dcr.setAttribute('y', 0);
+    dcr.setAttribute('width', wDone); dcr.setAttribute('height', TLH);
+    dcp.appendChild(dcr); defs.appendChild(dcp);
+    const dbp = ns('path'); dbp.setAttribute('d', waveD); dbp.setAttribute('fill', p.color);
+    if (p.status !== 'done') dbp.setAttribute('fill-opacity', '0.65');
+    dbp.setAttribute('clip-path', 'url(#' + doneId + ')'); bandsG.appendChild(dbp);
+    const dsr = ns('rect'); dsr.setAttribute('x', x1); dsr.setAttribute('y', 0);
+    dsr.setAttribute('width', wDone); dsr.setAttribute('height', TLH);
+    dsr.setAttribute('fill', 'url(#tlsp)'); dsr.setAttribute('clip-path', 'url(#' + doneId + ')');
+    stitchG.appendChild(dsr);
+
+    if (wRem > 0) {
+      const remId = 'tlr' + segIdx++;
+      const rcp = ns('clipPath'); rcp.setAttribute('id', remId);
+      const rcr = ns('rect'); rcr.setAttribute('x', x2End); rcr.setAttribute('y', 0);
+      rcr.setAttribute('width', wRem); rcr.setAttribute('height', TLH);
+      rcp.appendChild(rcr); defs.appendChild(rcp);
+      const rbp = ns('path'); rbp.setAttribute('d', waveD); rbp.setAttribute('fill', p.color); rbp.setAttribute('fill-opacity', '0.35');
+      rbp.setAttribute('clip-path', 'url(#' + remId + ')'); bandsG.appendChild(rbp);
+      const rhp = ns('path'); rhp.setAttribute('d', waveD); rhp.setAttribute('fill', 'url(#tlhp)');
+      rhp.setAttribute('clip-path', 'url(#' + remId + ')'); bandsG.appendChild(rhp);
+    }
+
+    _tlSegments.push({ x: x1, w: wDone + wRem, project: p });
+
+    // ── Labels: three staggered rows at fixed heights, with tick lines ──
+    // Row assignment cycles 0→1→2→0… but pi=0 (Fingerless gloves) is forced
+    // to row 2 (topmost) so it clears the adjacent Balaclava label.
+    const ROW_Y = [58, 40, 22];   // row 0 = lowest, row 2 = highest
+    const rowCycle = [2, 1, 0, 2, 1, 0, 2]; // one entry per sorted project
+    const row   = rowCycle[pi] !== undefined ? rowCycle[pi] : pi % 3;
+    const labelY = ROW_Y[row];
+    const midX   = Math.max(x1 + 4, Math.min(x1 + wDone / 2, W - FRINGE_W - 6));
+
+    // Tick line from label down to scarf top edge
+    const scarfTopAtMid = waveY(midX - BODY_X, TL_CY, TL_AMP) - TL_SH / 2;
+    const tickLine = ns('line');
+    tickLine.setAttribute('x1', midX); tickLine.setAttribute('y1', labelY + 2);
+    tickLine.setAttribute('x2', midX); tickLine.setAttribute('y2', scarfTopAtMid - 2);
+    tickLine.setAttribute('stroke', p.color); tickLine.setAttribute('stroke-width', '0.8');
+    tickLine.setAttribute('stroke-dasharray', '2,2'); tickLine.setAttribute('opacity', '0.55');
+    labelG.appendChild(tickLine);
+
+    // Label text — full name, no truncation
+    const lt = ns('text');
+    lt.setAttribute('x', midX); lt.setAttribute('y', labelY);
+    lt.setAttribute('text-anchor', 'middle'); lt.setAttribute('font-size', '11');
+    lt.setAttribute('font-family', "'DM Mono', monospace"); lt.setAttribute('fill', p.color);
+    lt.setAttribute('font-weight', '500');
+    lt.textContent = p.name; labelG.appendChild(lt);
+
+    if (pi > 0) {
+      const dvl = ns('line');
+      dvl.setAttribute('x1', x1); dvl.setAttribute('y1', waveY(x1 - BODY_X, TL_CY, TL_AMP) - TL_SH / 2 - 1);
+      dvl.setAttribute('x2', x1); dvl.setAttribute('y2', waveY(x1 - BODY_X, TL_CY, TL_AMP) + TL_SH / 2 + 1);
+      dvl.setAttribute('stroke', 'rgba(255,255,255,0.55)'); dvl.setAttribute('stroke-width', '1.2');
+      divG.appendChild(dvl);
+    }
+  });
+
+  const et = ns('path'); et.setAttribute('d', buildWaveEdge('top', TL_CY, TL_AMP, TL_SH));
+  et.setAttribute('fill', 'none'); et.setAttribute('stroke', 'rgba(0,0,0,0.06)'); et.setAttribute('stroke-width', '1');
+  const eb = ns('path'); eb.setAttribute('d', buildWaveEdge('bot', TL_CY, TL_AMP, TL_SH));
+  eb.setAttribute('fill', 'none'); eb.setAttribute('stroke', 'rgba(0,0,0,0.06)'); eb.setAttribute('stroke-width', '1');
+
+  const todayTopY = waveY(nowX - BODY_X, TL_CY, TL_AMP) - TL_SH / 2 - 4;
+  const todayBotY = waveY(nowX - BODY_X, TL_CY, TL_AMP) + TL_SH / 2 + 4;
+  const todayLine = ns('line');
+  todayLine.setAttribute('x1', nowX); todayLine.setAttribute('y1', todayTopY);
+  todayLine.setAttribute('x2', nowX); todayLine.setAttribute('y2', todayBotY);
+  todayLine.setAttribute('stroke', 'rgba(107,107,98,0.65)'); todayLine.setAttribute('stroke-width', '1.5');
+  todayLine.setAttribute('stroke-dasharray', '3,3');
+  const todayLabel = ns('text'); todayLabel.setAttribute('x', nowX + 4); todayLabel.setAttribute('y', todayTopY - 3);
+  todayLabel.setAttribute('font-size', '9'); todayLabel.setAttribute('font-family', "'DM Mono', monospace");
+  todayLabel.setAttribute('fill', 'rgba(107,107,98,0.85)'); todayLabel.textContent = 'today';
+
+  const tickBaseY = waveY(BODY_W / 2, TL_CY, TL_AMP) + TL_SH / 2 + 8;
+  let td = new Date(TL_START);
+  while (td <= TL_NOW) {
+    const tx = dateToX(td.toISOString().slice(0, 10));
+    const tick = ns('line');
+    tick.setAttribute('x1', tx); tick.setAttribute('y1', tickBaseY);
+    tick.setAttribute('x2', tx); tick.setAttribute('y2', tickBaseY + 4);
+    tick.setAttribute('stroke', 'rgba(107,107,98,0.45)'); tick.setAttribute('stroke-width', '0.5');
+    tickG.appendChild(tick);
+    if (td.getMonth() % 6 === 0) {
+      const tl = ns('text'); tl.setAttribute('x', tx); tl.setAttribute('y', tickBaseY + 14);
+      tl.setAttribute('text-anchor', 'middle'); tl.setAttribute('font-size', '9');
+      tl.setAttribute('font-family', "'DM Mono', monospace"); tl.setAttribute('fill', 'rgba(107,107,98,0.8)');
+      tl.textContent = td.toLocaleDateString('en-US', { month: 'short', year: '2-digit' });
+      tickG.appendChild(tl);
+    }
+    td.setMonth(td.getMonth() + 1);
+  }
+
+  getSkillMilestones().forEach(m => {
+    const mx  = dateToX(m.date);
+    const my  = waveY(mx - BODY_X, TL_CY, TL_AMP) - TL_SH / 2 - 2;
+    const dia = ns('polygon');
+    dia.setAttribute('points', `${mx},${my - 6} ${mx + 4},${my} ${mx},${my + 6} ${mx - 4},${my}`);
+    dia.setAttribute('fill', 'rgba(245,243,185,0.9)');
+    dia.setAttribute('stroke', 'rgba(107,107,98,0.7)'); dia.setAttribute('stroke-width', '0.8');
+    markerG.appendChild(dia);
+  });
+
+  const ley = waveY(0, TL_CY, TL_AMP);
+  const fsp = TL_SH / 19;
+  const leftG = ns('g');
+  const leftCol = sorted[0]?.color || '#b8956a';
+  for (let i = 0; i < 20; i++) {
+    const l = ns('line'); const fy = ley - TL_SH / 2 + i * fsp;
+    l.setAttribute('x1', BODY_X); l.setAttribute('y1', fy); l.setAttribute('x2', BODY_X - FRINGE_W); l.setAttribute('y2', fy);
+    l.setAttribute('stroke', leftCol); l.setAttribute('stroke-width', '2.5'); l.setAttribute('stroke-linecap', 'round'); l.setAttribute('opacity', '0.8');
+    leftG.appendChild(l);
+  }
+
+  const rey = waveY(BODY_W, TL_CY, TL_AMP);
+  const endX = BODY_X + BODY_W;
+  const rightG = ns('g');
+  const rightCol = sorted[sorted.length - 1]?.color || '#b8956a';
+  for (let i = 0; i < 20; i++) {
+    const l = ns('line'); const fy = rey - TL_SH / 2 + i * fsp;
+    l.setAttribute('x1', endX); l.setAttribute('y1', fy); l.setAttribute('x2', endX + FRINGE_W); l.setAttribute('y2', fy);
+    l.setAttribute('stroke', rightCol); l.setAttribute('stroke-width', '2.5'); l.setAttribute('stroke-linecap', 'round'); l.setAttribute('opacity', '0.8');
+    rightG.appendChild(l);
+  }
+
+  svg.appendChild(bandsG); svg.appendChild(stitchG); svg.appendChild(et); svg.appendChild(eb);
+  svg.appendChild(todayLine); svg.appendChild(todayLabel);
+  svg.appendChild(divG); svg.appendChild(labelG); svg.appendChild(tickG); svg.appendChild(markerG);
+  svg.appendChild(leftG); svg.appendChild(rightG);
+}
+
+function getSkillMilestones() {
+  const seen = new Set(), milestones = [];
+  const sorted = [...projects].filter(p => p.startDate).sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
+  sorted.forEach(p => {
+    (p.skills || []).forEach((sk, i) => {
+      if (!seen.has(sk)) {
+        seen.add(sk);
+        const d = new Date(p.startDate + 'T00:00:00');
+        d.setDate(d.getDate() + 7 * i);
+        milestones.push({ skill: sk, date: d.toISOString().slice(0, 10), project: p.name, color: p.color });
+      }
+    });
+  });
+  return milestones;
+}
+
+function renderTimelineList() {
+  const el = document.getElementById('timeline-proj-list');
+  el.innerHTML = '';
+  const sorted = [...projects].filter(p => p.startDate).sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
+  sorted.forEach(p => {
+    const start  = p.startDate ? fmtMY(new Date(p.startDate + 'T00:00:00')) : '—';
+    const end    = p.status === 'done' && p.endDate ? fmtMY(new Date(p.endDate + 'T00:00:00')) : p.status === 'done' ? '—' : 'ongoing';
+    const badges = (p.skills || []).slice(0, 3).map(s => `<span class="tl-skill-badge">${s}</span>`).join('');
+    const row = document.createElement('div'); row.className = 'timeline-proj-row';
+    row.innerHTML = `<div class="tl-swatch" style="background:${p.color}"></div>
+      <span class="tl-name">${p.name}</span>
+      <div class="tl-skill-badges">${badges}</div>
+      <span class="tl-dates">${start} → ${end}</span>`;
+    row.addEventListener('click', () => openEditModal(projects.indexOf(p)));
+    el.appendChild(row);
+  });
+}
+
+function renderSkillsGrid() {
+  const el = document.getElementById('skills-grid');
+  el.innerHTML = '';
+  const allSkills = new Map();
+  const sorted = [...projects].filter(p => p.startDate).sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
+  sorted.forEach(p => {
+    (p.skills || []).forEach(sk => {
+      if (!allSkills.has(sk))
+        allSkills.set(sk, { project: p.name, color: p.color, unlocked: p.pct > 10 || p.status === 'done' });
+    });
+  });
+  allSkills.forEach((info, skill) => {
+    const pill = document.createElement('span');
+    pill.className = 'skill-pill' + (info.unlocked ? ' unlocked' : '');
+    pill.textContent = skill;
+    pill.title = `Learned in: ${info.project}`;
+    el.appendChild(pill);
+  });
+}
+
+function renderTimelineView() {
+  renderTimelineScarf();
+  renderTimelineList();
+  renderSkillsGrid();
+  const allSkills = new Set();
+  projects.forEach(p => (p.skills || []).forEach(s => allSkills.add(s)));
+  document.getElementById('timeline-caption').textContent =
+    `Jan 2023 → today · ${allSkills.size} skills unlocked`;
+}
+
 // ── TOOLTIPS ──
 const tooltip = document.getElementById('tooltip');
 
-document.getElementById('status-scarf-svg').addEventListener('mousemove', e=>{
-  const rect=e.currentTarget.getBoundingClientRect();
-  const svgX=(e.clientX-rect.left)/rect.width*W;
-  let found=null;
-  for(const seg of _segments){ if(svgX>=seg.x && svgX<seg.x+seg.w){ found=seg; break; } }
-  if(found){
-    const p=found.project, pct=p.total>0?Math.round(p.rows/p.total*100):0;
-    tooltip.textContent=found.rem?`${p.name} — ${pct}% done (${p.total-p.rows} rows remaining)`:`${p.name} — ${pct}% done`;
-    tooltip.style.opacity='1'; tooltip.style.left=(e.clientX+14)+'px'; tooltip.style.top=(e.clientY-32)+'px';
-  } else { tooltip.style.opacity='0'; }
+document.getElementById('timeline-scarf-svg').addEventListener('mousemove', e => {
+  const rect = e.currentTarget.getBoundingClientRect();
+  const svgX = (e.clientX - rect.left) / rect.width * W;
+  let found = null;
+  for (const seg of _tlSegments) { if (svgX >= seg.x && svgX < seg.x + seg.w) { found = seg; break; } }
+  if (found) {
+    const p = found.project;
+    const start = p.startDate ? fmtMY(new Date(p.startDate + 'T00:00:00')) : '?';
+    const end   = p.endDate   ? fmtMY(new Date(p.endDate   + 'T00:00:00')) : 'ongoing';
+    const pct   = p.total > 0 ? Math.round(p.rows / p.total * 100) : 0;
+    const skillStr = (p.skills || []).join(', ');
+    tooltip.innerHTML = `<strong>${p.name}</strong> · ${start} → ${end} · ${pct}%` +
+      (skillStr ? `<br><span style="opacity:0.7;font-size:11px">Skills: ${skillStr}</span>` : '');
+    tooltip.style.opacity = '1'; tooltip.style.left = (e.clientX + 14) + 'px'; tooltip.style.top = (e.clientY - 40) + 'px';
+  } else { tooltip.style.opacity = '0'; }
 });
-document.getElementById('status-scarf-svg').addEventListener('mouseleave',()=>tooltip.style.opacity='0');
+document.getElementById('timeline-scarf-svg').addEventListener('mouseleave', () => tooltip.style.opacity = '0');
+
+document.getElementById('status-scarf-svg').addEventListener('mousemove', e => {
+  const rect = e.currentTarget.getBoundingClientRect();
+  const svgX = (e.clientX - rect.left) / rect.width * W;
+  let found = null;
+  for (const seg of _statusSegments) { if (svgX >= seg.x && svgX < seg.x + seg.w) { found = seg; break; } }
+  if (found) {
+    const p = found.project, pct = p.total > 0 ? Math.round(p.rows / p.total * 100) : 0;
+    tooltip.textContent = found.rem ? `${p.name} — ${pct}% done (${p.total - p.rows} rows remaining)` : `${p.name} — ${pct}% done`;
+    tooltip.style.opacity = '1'; tooltip.style.left = (e.clientX + 14) + 'px'; tooltip.style.top = (e.clientY - 32) + 'px';
+  } else { tooltip.style.opacity = '0'; }
+});
+document.getElementById('status-scarf-svg').addEventListener('mouseleave', () => tooltip.style.opacity = '0');
+
+document.getElementById('scarf-svg').addEventListener('mousemove', e => {
+  const rect = document.getElementById('scarf-svg').getBoundingClientRect();
+  const svgX = (e.clientX - rect.left) / rect.width * W;
+  let found = null;
+  for (const seg of _segments) { if (svgX >= seg.x && svgX < seg.x + seg.w) { found = seg; break; } }
+  if (found) {
+    const p = found.project, pct = p.total > 0 ? Math.round(p.rows / p.total * 100) : 0;
+    const yarnInfo = [p.yarnType, p.yarnColorName].filter(Boolean).join(' · ');
+    const deadlineStr = p.deadline ? ` · ${deadlineDays(p.deadline) === 0 ? 'Due today' : deadlineDays(p.deadline) < 0 ? Math.abs(deadlineDays(p.deadline)) + 'd overdue' : deadlineDays(p.deadline) + 'd left'}` : '';
+    const yarnStr = yarnInfo ? ` · ${yarnInfo}` : '';
+    tooltip.textContent = found.rem
+      ? `${p.name} — ${pct}% done (${p.total - p.rows} rows remaining${deadlineStr})${yarnStr}`
+      : `${p.name} — ${pct}% done${deadlineStr}${yarnStr}`;
+    tooltip.style.opacity = '1'; tooltip.style.left = (e.clientX + 14) + 'px'; tooltip.style.top = (e.clientY - 32) + 'px';
+  } else { tooltip.style.opacity = '0'; }
+});
+document.getElementById('scarf-svg').addEventListener('mouseleave', () => tooltip.style.opacity = '0');
 
 // ── RENDER STATS ──
-function renderStats(){
-  const totalRows=projects.reduce((s,p)=>s+p.total,0);
-  const doneRows=projects.reduce((s,p)=>s+p.rows,0);
-  const active=projects.filter(p=>p.status==='active').length;
-  const paused=projects.filter(p=>p.status==='paused').length;
-  const done=projects.filter(p=>p.status==='done').length;
-  document.getElementById('total-pct').textContent=totalRows>0?Math.round(doneRows/totalRows*100)+'%':'0%';
-  document.getElementById('total-rows').textContent=doneRows;
-  document.getElementById('total-note').textContent='of '+totalRows+' total';
-  document.getElementById('stat-done').textContent=done+'/'+projects.length;
-  document.getElementById('stat-breakdown').textContent=active+' active · '+paused+' paused';
-  document.getElementById('ftr-text').textContent=`${projects.length} projects · ${active} active · ${paused} paused · ${done} complete`;
+function renderStats() {
+  const totalRows = projects.reduce((s, p) => s + p.total, 0);
+  const doneRows  = projects.reduce((s, p) => s + p.rows, 0);
+  const active = projects.filter(p => p.status === 'active').length;
+  const paused = projects.filter(p => p.status === 'paused').length;
+  const done   = projects.filter(p => p.status === 'done').length;
+  document.getElementById('total-pct').textContent   = totalRows > 0 ? Math.round(doneRows / totalRows * 100) + '%' : '0%';
+  document.getElementById('total-rows').textContent  = doneRows;
+  document.getElementById('total-note').textContent  = 'of ' + totalRows + ' total';
+  document.getElementById('stat-done').textContent   = done + '/' + projects.length;
+  document.getElementById('stat-breakdown').textContent = active + ' active · ' + paused + ' paused';
+  document.getElementById('ftr-text').textContent    = `${projects.length} projects · ${active} active · ${paused} paused · ${done} complete`;
 }
 
 // ── DEADLINE HELPERS ──
-function deadlineDays(deadline){
-  if(!deadline) return null;
-  const now=new Date(); now.setHours(0,0,0,0);
-  return Math.round((new Date(deadline+'T00:00:00')-now)/(1000*60*60*24));
+function deadlineDays(deadline) {
+  if (!deadline) return null;
+  const now = new Date(); now.setHours(0, 0, 0, 0);
+  return Math.round((new Date(deadline + 'T00:00:00') - now) / (1000 * 60 * 60 * 24));
 }
-function deadlineBadge(p){
-  if(!p.deadline||p.status==='done') return '';
-  const days=deadlineDays(p.deadline);
-  let cls='deadline-badge', txt;
-  if(days<0){ cls+=' overdue'; txt=`${Math.abs(days)}d overdue`; }
-  else if(days===0){ cls+=' soon'; txt='Due today'; }
-  else if(days<=7){ cls+=' soon'; txt=`${days}d left`; }
-  else { txt=`${days}d left`; }
+function deadlineBadge(p) {
+  if (!p.deadline || p.status === 'done') return '';
+  const days = deadlineDays(p.deadline);
+  let cls = 'deadline-badge', txt;
+  if (days < 0)        { cls += ' overdue'; txt = `${Math.abs(days)}d overdue`; }
+  else if (days === 0) { cls += ' soon';    txt = 'Due today'; }
+  else if (days <= 7)  { cls += ' soon';    txt = `${days}d left`; }
+  else                 { txt = `${days}d left`; }
   return `<span class="${cls}">${txt}</span>`;
 }
 
-// ── RENDER SIDEBAR LIST ──
-let dragSrcIdx=null;
-function renderList(){
-  const list=document.getElementById('project-list');
-  list.innerHTML='';
-  projects.forEach((p,i)=>{
-    const pct=p.total>0?Math.round(p.rows/p.total*100):0;
-    const pillC=p.status==='active'?'p-active':p.status==='paused'?'p-paused':'p-done';
-    const pillL=p.status==='active'?'Active':p.status==='paused'?'Paused':'Done';
-    const row=document.createElement('div');
-    row.className='project-row'; row.draggable=true; row.dataset.idx=i;
-    row.innerHTML=`<span class="drag-handle" title="Drag to reorder">⠿</span>
+// ── SIDEBAR ──
+// Sidebar always reflects the manual drag-order in projects[].
+let dragSrcIdx = null;
+function renderList() {
+  const list = document.getElementById('project-list');
+  list.innerHTML = '';
+  projects.forEach((p, i) => {
+    const pct = p.total > 0 ? Math.round(p.rows / p.total * 100) : 0;
+    const pillC = p.status === 'active' ? 'p-active' : p.status === 'paused' ? 'p-paused' : 'p-done';
+    const pillL = p.status === 'active' ? 'Active'   : p.status === 'paused' ? 'Paused'   : 'Done';
+    const yarnLine = [p.yarnType, p.yarnColorName].filter(Boolean).join(' · ');
+    const row = document.createElement('div');
+    row.className = 'project-row'; row.draggable = true; row.dataset.idx = i;
+    row.innerHTML = `<span class="drag-handle" title="Drag to reorder">⠿</span>
       <span class="swatch" style="background:${p.color}" data-idx="${i}" title="Change color"></span>
-      <span class="project-name">${p.name}</span>
+      <div class="project-info">
+        <span class="project-name">${p.name}</span>
+        ${yarnLine ? `<span class="project-yarn"><span class="yarn-dot" style="background:${p.yarnColor || '#ccc'}"></span>${yarnLine}</span>` : ''}
+      </div>
       <div class="project-right">
         <span class="project-rows">${p.rows}/${p.total}</span>
         ${deadlineBadge(p)}
         <div class="bar-wrap"><div class="bar-fill" style="width:${pct}%;background:${p.color}"></div></div>
         <span class="pill ${pillC}" data-idx="${i}" title="Click to cycle status">${pillL}</span>
       </div>`;
-    row.addEventListener('click',e=>{ if(e.target.classList.contains('pill')||e.target.classList.contains('swatch')) return; openEditModal(i); });
-    row.querySelector('.pill').addEventListener('click',e=>{ e.stopPropagation(); cycleStatus(i); });
-    row.querySelector('.swatch').addEventListener('click',e=>{ e.stopPropagation(); openColorPicker(i,e.currentTarget); });
-    row.addEventListener('dragstart',e=>{ dragSrcIdx=i; row.classList.add('dragging'); e.dataTransfer.effectAllowed='move'; });
-    row.addEventListener('dragend',()=>{ row.classList.remove('dragging'); document.querySelectorAll('.project-row').forEach(r=>r.classList.remove('drag-over')); });
-    row.addEventListener('dragover',e=>{ e.preventDefault(); row.classList.add('drag-over'); });
-    row.addEventListener('dragleave',()=>row.classList.remove('drag-over'));
-    row.addEventListener('drop',e=>{ e.preventDefault(); row.classList.remove('drag-over'); if(dragSrcIdx!==null&&dragSrcIdx!==i){ const moved=projects.splice(dragSrcIdx,1)[0]; projects.splice(i,0,moved); render(); } });
+    row.addEventListener('click', e => { if (e.target.classList.contains('pill') || e.target.classList.contains('swatch')) return; openEditModal(i); });
+    row.querySelector('.pill').addEventListener('click', e => { e.stopPropagation(); cycleStatus(i); });
+    row.querySelector('.swatch').addEventListener('click', e => { e.stopPropagation(); openColorPicker(i, e.currentTarget); });
+    row.addEventListener('dragstart', e => { dragSrcIdx = i; row.classList.add('dragging'); e.dataTransfer.effectAllowed = 'move'; });
+    row.addEventListener('dragend', () => { row.classList.remove('dragging'); document.querySelectorAll('.project-row').forEach(r => r.classList.remove('drag-over')); });
+    row.addEventListener('dragover', e => { e.preventDefault(); row.classList.add('drag-over'); });
+    row.addEventListener('dragleave', () => row.classList.remove('drag-over'));
+    row.addEventListener('drop', e => { e.preventDefault(); row.classList.remove('drag-over'); if (dragSrcIdx !== null && dragSrcIdx !== i) { const moved = projects.splice(dragSrcIdx, 1)[0]; projects.splice(i, 0, moved); render(); } });
     list.appendChild(row);
   });
 }
 
-function cycleStatus(i){
-  const cycle={active:'paused',paused:'done',done:'active'};
-  projects[i].status=cycle[projects[i].status];
-  if(projects[i].status==='done'){ projects[i].rows=projects[i].total; projects[i].pct=100; }
+function cycleStatus(i) {
+  const cycle = { active: 'paused', paused: 'done', done: 'active' };
+  projects[i].status = cycle[projects[i].status];
+  if (projects[i].status === 'done') { projects[i].rows = projects[i].total; projects[i].pct = 100; }
   render();
 }
 
 // ── COLOR PICKER ──
-const colorPopover=document.getElementById('color-popover');
-let colorPickerIdx=null;
-function openColorPicker(idx,anchor){
-  colorPickerIdx=idx;
-  const grid=colorPopover.querySelector('div'); grid.innerHTML='';
-  PALETTE.forEach(c=>{
-    const btn=document.createElement('div');
-    btn.style.cssText=`width:24px;height:24px;border-radius:4px;background:${c};cursor:pointer;border:2px solid ${c===projects[idx].color?'#333':'transparent'}`;
-    btn.addEventListener('click',()=>{ projects[colorPickerIdx].color=c; closeColorPicker(); render(); });
+const colorPopover = document.getElementById('color-popover');
+let colorPickerIdx = null;
+function openColorPicker(idx, anchor) {
+  colorPickerIdx = idx;
+  const grid = colorPopover.querySelector('div'); grid.innerHTML = '';
+  PALETTE.forEach(c => {
+    const btn = document.createElement('div');
+    btn.style.cssText = `width:24px;height:24px;border-radius:4px;background:${c};cursor:pointer;border:2px solid ${c === projects[idx].color ? '#333' : 'transparent'}`;
+    btn.addEventListener('click', () => { projects[colorPickerIdx].color = c; closeColorPicker(); render(); });
     grid.appendChild(btn);
   });
-  const ci=document.createElement('input'); ci.type='color'; ci.value=projects[idx].color;
-  ci.style.cssText='width:24px;height:24px;border-radius:4px;cursor:pointer;border:none;padding:0;background:none'; ci.title='Custom color';
-  ci.addEventListener('input',e=>{ projects[colorPickerIdx].color=e.target.value; render(); });
+  const ci = document.createElement('input'); ci.type = 'color'; ci.value = projects[idx].color;
+  ci.style.cssText = 'width:24px;height:24px;border-radius:4px;cursor:pointer;border:none;padding:0;background:none'; ci.title = 'Custom color';
+  ci.addEventListener('input', e => { projects[colorPickerIdx].color = e.target.value; render(); });
   grid.appendChild(ci);
-  const rect=anchor.getBoundingClientRect();
-  colorPopover.style.display='block'; colorPopover.style.left=rect.left+'px'; colorPopover.style.top=(rect.bottom+6)+'px';
+  const rect = anchor.getBoundingClientRect();
+  colorPopover.style.display = 'block'; colorPopover.style.left = rect.left + 'px'; colorPopover.style.top = (rect.bottom + 6) + 'px';
 }
-function closeColorPicker(){ colorPopover.style.display='none'; colorPickerIdx=null; }
-document.addEventListener('click',e=>{ if(!colorPopover.contains(e.target)&&!e.target.classList.contains('swatch')) closeColorPicker(); });
+function closeColorPicker() { colorPopover.style.display = 'none'; colorPickerIdx = null; }
+document.addEventListener('click', e => { if (!colorPopover.contains(e.target) && !e.target.classList.contains('swatch')) closeColorPicker(); });
 
 // ── EDIT MODAL ──
-let editIdx=-1;
-function openEditModal(i){
-  editIdx=i; const p=projects[i];
-  document.getElementById('modal-title').textContent=p.name;
-  document.getElementById('modal-name').value=p.name;
-  const slider=document.getElementById('modal-slider'); slider.max=p.total; slider.value=p.rows;
-  document.getElementById('modal-readout').textContent=p.rows+' / '+p.total+' rows';
-  document.getElementById('modal-status').value=p.status;
-  document.getElementById('modal-date').value=p.deadline||'';
+let editIdx = -1;
+function openEditModal(i) {
+  editIdx = i; const p = projects[i];
+  document.getElementById('modal-title').textContent = p.name;
+  document.getElementById('modal-name').value = p.name;
+  const slider = document.getElementById('modal-slider'); slider.max = p.total; slider.value = p.rows;
+  document.getElementById('modal-readout').textContent = p.rows + ' / ' + p.total + ' rows';
+  document.getElementById('modal-status').value = p.status;
+  document.getElementById('modal-date').value = p.deadline || '';
+  document.getElementById('modal-yarn-type').value = p.yarnType || '';
+  document.getElementById('modal-yarn-color-name').value = p.yarnColorName || '';
+  const yc = p.yarnColor || '#cccccc';
+  document.getElementById('modal-yarn-color-picker').value = yc;
+  document.getElementById('modal-yarn-color-preview').style.background = yc;
+  document.getElementById('modal-start-date').value = p.startDate || '';
+  document.getElementById('modal-end-date').value   = p.endDate   || '';
   document.getElementById('modal-backdrop').classList.add('open');
 }
-document.getElementById('modal-slider').addEventListener('input',e=>{
-  document.getElementById('modal-readout').textContent=parseInt(e.target.value)+' / '+projects[editIdx].total+' rows';
+document.getElementById('modal-yarn-color-preview').addEventListener('click', () => document.getElementById('modal-yarn-color-picker').click());
+document.getElementById('modal-yarn-color-picker').addEventListener('input', e => document.getElementById('modal-yarn-color-preview').style.background = e.target.value);
+document.getElementById('modal-slider').addEventListener('input', e => {
+  document.getElementById('modal-readout').textContent = parseInt(e.target.value) + ' / ' + projects[editIdx].total + ' rows';
 });
-document.getElementById('modal-cancel').addEventListener('click',()=>document.getElementById('modal-backdrop').classList.remove('open'));
-document.getElementById('modal-delete').addEventListener('click',()=>{
-  if(projects.length<=1){ alert("Can't delete the last project!"); return; }
-  projects.splice(editIdx,1); document.getElementById('modal-backdrop').classList.remove('open'); render();
+document.getElementById('modal-cancel').addEventListener('click', () => document.getElementById('modal-backdrop').classList.remove('open'));
+document.getElementById('modal-delete').addEventListener('click', () => {
+  if (projects.length <= 1) { alert("Can't delete the last project!"); return; }
+  projects.splice(editIdx, 1); document.getElementById('modal-backdrop').classList.remove('open'); render();
 });
-document.getElementById('modal-save').addEventListener('click',()=>{
-  const v=parseInt(document.getElementById('modal-slider').value);
-  const p=projects[editIdx]; const oldRows=p.rows;
-  p.name=document.getElementById('modal-name').value.trim()||p.name;
-  p.rows=v; p.pct=p.total>0?Math.round(v/p.total*100):0;
-  p.status=document.getElementById('modal-status').value;
-  p.deadline=document.getElementById('modal-date').value||null;
-  if(v>=p.total){ p.status='done'; p.pct=100; p.rows=p.total; }
-  if(v!==oldRows){ log.unshift({date:new Date(),name:p.name,color:p.color,oldRows,newRows:v}); }
+document.getElementById('modal-save').addEventListener('click', () => {
+  const v = parseInt(document.getElementById('modal-slider').value);
+  const p = projects[editIdx]; const oldRows = p.rows;
+  p.name          = document.getElementById('modal-name').value.trim() || p.name;
+  p.rows          = v; p.pct = p.total > 0 ? Math.round(v / p.total * 100) : 0;
+  p.status        = document.getElementById('modal-status').value;
+  p.deadline      = document.getElementById('modal-date').value || null;
+  p.yarnType      = document.getElementById('modal-yarn-type').value.trim();
+  p.yarnColorName = document.getElementById('modal-yarn-color-name').value.trim();
+  p.yarnColor     = document.getElementById('modal-yarn-color-picker').value;
+  p.startDate     = document.getElementById('modal-start-date').value || null;
+  p.endDate       = document.getElementById('modal-end-date').value   || null;
+  if (v >= p.total) { p.status = 'done'; p.pct = 100; p.rows = p.total; }
+  if (v !== oldRows) { log.unshift({ date: new Date(), name: p.name, color: p.color, oldRows, newRows: v }); }
   document.getElementById('modal-backdrop').classList.remove('open'); render();
 });
 
 // ── ADD MODAL ──
-document.getElementById('add-total-slider').addEventListener('input',e=>{
-  document.getElementById('add-total-readout').textContent=parseInt(e.target.value)+' rows';
-});
-document.getElementById('add-proj-btn').addEventListener('click',()=>{
+document.getElementById('add-yarn-color-preview').addEventListener('click', () => document.getElementById('add-yarn-color-picker').click());
+document.getElementById('add-yarn-color-picker').addEventListener('input', e => document.getElementById('add-yarn-color-preview').style.background = e.target.value);
+document.getElementById('add-total-slider').addEventListener('input', e => document.getElementById('add-total-readout').textContent = parseInt(e.target.value) + ' rows');
+document.getElementById('add-proj-btn').addEventListener('click', () => {
   document.getElementById('add-backdrop').classList.add('open');
-  document.getElementById('add-name').value='';
-  document.getElementById('add-color').value=PALETTE[projects.length%PALETTE.length];
-  document.getElementById('add-total-slider').value=150;
-  document.getElementById('add-total-readout').textContent='150 rows';
-  document.getElementById('add-date').value='';
+  document.getElementById('add-name').value = '';
+  document.getElementById('add-color').value = PALETTE[projects.length % PALETTE.length];
+  document.getElementById('add-total-slider').value = 150;
+  document.getElementById('add-total-readout').textContent = '150 rows';
+  document.getElementById('add-date').value = '';
+  document.getElementById('add-yarn-type').value = '';
+  document.getElementById('add-yarn-color-name').value = '';
+  document.getElementById('add-yarn-color-picker').value = '#cccccc';
+  document.getElementById('add-yarn-color-preview').style.background = '#cccccc';
+  document.getElementById('add-start-date').value = new Date().toISOString().slice(0, 10);
 });
-document.getElementById('add-cancel').addEventListener('click',()=>document.getElementById('add-backdrop').classList.remove('open'));
-document.getElementById('add-save').addEventListener('click',()=>{
-  const name=document.getElementById('add-name').value.trim()||'New project';
-  const color=document.getElementById('add-color').value;
-  const total=parseInt(document.getElementById('add-total-slider').value);
-  const deadline=document.getElementById('add-date').value||null;
-  projects.push({name,pct:0,status:'active',color,rows:0,total,deadline});
+document.getElementById('add-cancel').addEventListener('click', () => document.getElementById('add-backdrop').classList.remove('open'));
+document.getElementById('add-save').addEventListener('click', () => {
+  const name          = document.getElementById('add-name').value.trim() || 'New project';
+  const color         = document.getElementById('add-color').value;
+  const total         = parseInt(document.getElementById('add-total-slider').value);
+  const deadline      = document.getElementById('add-date').value || null;
+  const yarnType      = document.getElementById('add-yarn-type').value.trim();
+  const yarnColorName = document.getElementById('add-yarn-color-name').value.trim();
+  const yarnColor     = document.getElementById('add-yarn-color-picker').value;
+  const startDate     = document.getElementById('add-start-date').value || new Date().toISOString().slice(0, 10);
+  projects.push({ name, pct: 0, status: 'active', color, rows: 0, total, deadline, yarnType, yarnColorName, yarnColor, startDate, endDate: null, skills: [] });
   document.getElementById('add-backdrop').classList.remove('open'); render();
 });
 
-// ── PROJECT VIEW TOOLTIP ──
-const scarfSVG=document.getElementById('scarf-svg');
-scarfSVG.addEventListener('mousemove',e=>{
-  const rect=scarfSVG.getBoundingClientRect();
-  const svgX=(e.clientX-rect.left)/rect.width*W;
-  let found=null;
-  for(const seg of _segments){ if(svgX>=seg.x&&svgX<seg.x+seg.w){ found=seg; break; } }
-  if(found){
-    const p=found.project, pct=p.total>0?Math.round(p.rows/p.total*100):0;
-    const deadlineStr=p.deadline?` · ${deadlineDays(p.deadline)===0?'Due today':deadlineDays(p.deadline)<0?Math.abs(deadlineDays(p.deadline))+'d overdue':deadlineDays(p.deadline)+'d left'}`:'';
-    tooltip.textContent=found.rem?`${p.name} — ${pct}% done (${p.total-p.rows} rows remaining${deadlineStr})`:`${p.name} — ${pct}% done${deadlineStr}`;
-    tooltip.style.opacity='1'; tooltip.style.left=(e.clientX+14)+'px'; tooltip.style.top=(e.clientY-32)+'px';
-  } else { tooltip.style.opacity='0'; }
-});
-scarfSVG.addEventListener('mouseleave',()=>tooltip.style.opacity='0');
-
 // ── ROW LOG ──
-let logOpen=false;
-document.getElementById('log-toggle').addEventListener('click',()=>{
-  logOpen=!logOpen;
-  document.getElementById('log-entries-wrap').style.display=logOpen?'block':'none';
-  document.getElementById('log-arrow').textContent=logOpen?'▾':'▸';
+let logOpen = false;
+document.getElementById('log-toggle').addEventListener('click', () => {
+  logOpen = !logOpen;
+  document.getElementById('log-entries-wrap').style.display = logOpen ? 'block' : 'none';
+  document.getElementById('log-arrow').textContent = logOpen ? '▾' : '▸';
   renderLog();
 });
-function renderLog(){
-  const el=document.getElementById('log-entries');
-  if(!log.length){ el.innerHTML='<div style="font-size:12px;color:var(--brown-muted);padding:8px 0">No row updates yet. Edit a project to start tracking.</div>'; return; }
-  el.innerHTML='';
-  log.slice(0,30).forEach(entry=>{
-    const d=entry.date;
-    const dateStr=d.toLocaleDateString(undefined,{month:'short',day:'numeric'})+' '+d.toLocaleTimeString(undefined,{hour:'2-digit',minute:'2-digit'});
-    const delta=entry.newRows-entry.oldRows;
-    const row=document.createElement('div'); row.className='log-entry';
-    row.innerHTML=`<div class="log-dot" style="background:${entry.color}"></div>
+function renderLog() {
+  const el = document.getElementById('log-entries');
+  if (!log.length) { el.innerHTML = '<div style="font-size:12px;color:var(--brown-muted);padding:8px 0">No row updates yet. Edit a project to start tracking.</div>'; return; }
+  el.innerHTML = '';
+  log.slice(0, 30).forEach(entry => {
+    const d = entry.date;
+    const dateStr = d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) + ' ' + d.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
+    const delta = entry.newRows - entry.oldRows;
+    const row = document.createElement('div'); row.className = 'log-entry';
+    row.innerHTML = `<div class="log-dot" style="background:${entry.color}"></div>
       <span class="log-name">${entry.name}</span>
-      <span class="log-delta">${delta>0?'+'+delta:delta} rows (${entry.newRows} total)</span>
+      <span class="log-delta">${delta > 0 ? '+' + delta : delta} rows (${entry.newRows} total)</span>
       <span class="log-date">${dateStr}</span>`;
     el.appendChild(row);
   });
 }
 
-
-
 // ── MAIN RENDER ──
-function render(){ renderScarf(); renderStats(); renderList(); if(logOpen) renderLog(); if(currentView==='status') renderStatusView(); }
+function render() {
+  renderScarf();
+  renderStats();
+  renderList();
+  if (logOpen) renderLog();
+  if (currentView === 'status')   renderStatusView();
+  if (currentView === 'timeline') renderTimelineView();
+}
 render();
 </script>
 </body>
